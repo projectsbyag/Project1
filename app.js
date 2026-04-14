@@ -5,6 +5,7 @@ const mongoSanitize = require("express-mongo-sanitize");
 const cors = require("cors");
 const rateLimit = require("express-rate-limit");
 const path = require("path");
+const compression = require("compression");
 
 const AppError = require("./utils/appError.js");
 const globalErrorHandler = require("./middleware/error.js");
@@ -25,6 +26,16 @@ const app = express();
 // ✅ Fix for Express proxy & X-Forwarded-For issue
 // Fixes 'trust proxy' misconfiguration
 app.set("trust proxy", "loopback, linklocal, uniquelocal");
+
+// ✅ GZIP Compression - PERFORMANCE OPTIMIZATION
+app.use(compression({
+    level: 6, // Balance between compression ratio and speed
+    threshold: 1024, // Only compress responses larger than 1KB
+    filter: (req, res) => {
+        if (req.headers['x-no-compression']) return false;
+        return compression.filter(req, res);
+    }
+}));
 
 // ✅ Improved CORS configuration
 app.use(cors({ origin: "*", credentials: true }));
@@ -67,6 +78,25 @@ app.use("/api", limiter);
 app.use(express.json({ limit: "800kb" }));
 app.use(mongoSanitize());
 
+// ✅ PERFORMANCE: Cache headers middleware
+app.use((req, res, next) => {
+    // Cache static assets for 1 year
+    if (/\.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot|webp)$/i.test(req.url)) {
+        res.set('Cache-Control', 'public, max-age=31536000, immutable');
+        res.set('ETag', ''); // Remove ETag for immutable assets
+    } 
+    // Cache HTML for 1 day
+    else if (/\.html$/i.test(req.url)) {
+        res.set('Cache-Control', 'public, max-age=86400, must-revalidate');
+    }
+    // Don't cache API responses
+    else if (req.url.includes('/api/')) {
+        res.set('Cache-Control', 'no-cache, no-store, must-revalidate, max-age=0');
+        res.set('Pragma', 'no-cache');
+        res.set('Expires', '0');
+    }
+    next();
+});
 
 // ✅ Serve static files correctly
 app.use(express.static(path.join(__dirname, "public")));

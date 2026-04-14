@@ -6,87 +6,173 @@ const API_BASE_URL = window.location.hostname.includes("127.0.0.1")
 let token = localStorage.getItem('token') || null;
 window.currentUser = null;
 
+/**
+ * PERFORMANCE OPTIMIZATION: Request Caching
+ * Caches GET requests for 5 minutes to reduce server load
+ */
+const requestCache = new Map();
+const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
+
+function getCacheKey(endpoint, options = {}) {
+    const method = options.method || 'GET';
+    const body = options.body ? JSON.stringify(options.body) : '';
+    return `${method}:${endpoint}:${body}`;
+}
+
+function getCachedData(endpoint, options = {}) {
+    const key = getCacheKey(endpoint, options);
+    const cached = requestCache.get(key);
+    
+    if (cached && Date.now() - cached.timestamp < CACHE_DURATION) {
+        console.log(`📦 Using cached response for ${endpoint}`);
+        return cached.data;
+    }
+    
+    if (cached) {
+        requestCache.delete(key);
+    }
+    return null;
+}
+
+function setCachedData(endpoint, options, data) {
+    const key = getCacheKey(endpoint, options);
+    requestCache.set(key, { data, timestamp: Date.now() });
+}
+
+/**
+ * PERFORMANCE OPTIMIZATION: Request Debouncing
+ * Prevents duplicate requests within 500ms
+ */
+const requestQueue = new Map();
+
+async function debouncedFetch(endpoint, options = {}, fetchFn) {
+    const key = getCacheKey(endpoint, options);
+    
+    if (requestQueue.has(key)) {
+        console.log(`⏳ Debouncing duplicate request for ${endpoint}`);
+        return requestQueue.get(key);
+    }
+    
+    const promise = fetchFn();
+    requestQueue.set(key, promise);
+    
+    try {
+        const result = await promise;
+        return result;
+    } finally {
+        setTimeout(() => requestQueue.delete(key), 500);
+    }
+}
+
 // Helper for making authenticated requests
 const fetchWithAuth = async (endpoint, options = {}) => {
-    if (!options.headers) options.headers = {};
-    
-    if (token) {
-        options.headers.Authorization = `Bearer ${token}`;
+    // Check cache for GET requests
+    if (!options.method || options.method === 'GET') {
+        const cached = getCachedData(endpoint, options);
+        if (cached) return cached;
     }
     
-    if (!options.noContentType && !options.formData) {
-        options.headers['Content-Type'] = 'application/json';
-    }
-    
-    const response = await fetch(`${API_BASE_URL}${endpoint}`, options);
-    
-    // If no content (204), return an empty object
-    if (response.status === 204) return {};
-    
-    // Handle 401 Unauthorized
-    if (response.status === 401) {
-        // Clear token and redirect to login
-        authService.logout();
-        loadLoginPage();
-        throw new Error('Session expired. Please log in again.');
-    }
- 
-    
-    const data = await response.json();
-    
-    if (!response.ok) {
-        throw new Error(data.message || 'Something went wrong');
-    }
-    
-    return data;
-};
-
-const fetchWithoutAuth = async (endpoint, options = {}) => {
-    if (!options.headers) options.headers = {};
-   
-    // Set content type if not specified and not form data
-    if (!options.noContentType && !options.formData) {
-        options.headers['Content-Type'] = 'application/json';
-    }
-   
-    try {
+    // Use debounced fetch to prevent duplicate requests
+    return debouncedFetch(endpoint, options, async () => {
+        if (!options.headers) options.headers = {};
+        
+        if (token) {
+            options.headers.Authorization = `Bearer ${token}`;
+        }
+        
+        if (!options.noContentType && !options.formData) {
+            options.headers['Content-Type'] = 'application/json';
+        }
+        
         const response = await fetch(`${API_BASE_URL}${endpoint}`, options);
-   
+        
         // If no content (204), return an empty object
         if (response.status === 204) return {};
         
-        // Try to parse as JSON
+        // Handle 401 Unauthorized
+        if (response.status === 401) {
+            // Clear token and redirect to login
+            authService.logout();
+            loadLoginPage();
+            throw new Error('Session expired. Please log in again.');
+        }
+        
         const data = await response.json();
         
-        // Handle non-2xx responses with proper error messages
         if (!response.ok) {
-            const error = new Error(data.message || 'Something went wrong');
-            error.status = response.status;
-            error.data = data;
-            throw error;
+            throw new Error(data.message || 'Something went wrong');
+        }
+        
+        // Cache GET requests
+        if (!options.method || options.method === 'GET') {
+            setCachedData(endpoint, options, data);
         }
         
         return data;
-    } catch (error) {
-        // Handle network errors
-        if (error.name === 'TypeError' && error.message.includes('NetworkError')) {
-            throw new Error('Unable to connect to the server. Please check your internet connection.');
-        }
-        
-        // Handle JSON parsing errors
-        if (error instanceof SyntaxError) {
-            throw new Error('Invalid response from server. Please try again.');
-        }
-        
-        // If it's our custom error with status, throw it as is
-        if (error.status) {
-            throw error;
-        }
-        
-        // For any other errors
-        throw new Error('An unexpected error occurred. Please try again.');
-    }
+    });
 };
+
+const fetchWithoutAuth = async (endpoint, options = {}) => {
+    // Check cache for GET requests
+    if (!options.method || options.method === 'GET') {
+        const cached = getCachedData(endpoint, options);
+        if (cached) return cached;
+    }
+    
+    // Use debounced fetch to prevent duplicate requests
+    return debouncedFetch(endpoint, options, async () => {
+        if (!options.headers) options.headers = {};
+       
+        // Set content type if not specified and not form data
+        if (!options.noContentType && !options.formData) {
+            options.headers['Content-Type'] = 'application/json';
+        }
+       
+        try {
+            const response = await fetch(`${API_BASE_URL}${endpoint}`, options);
+       
+            // If no content (204), return an empty object
+            if (response.status === 204) return {};
+            
+            // Try to parse as JSON
+            const data = await response.json();
+            
+            // Handle non-2xx responses with proper error messages
+            if (!response.ok) {
+                const error = new Error(data.message || 'Something went wrong');
+                error.status = response.status;
+                error.data = data;
+                throw error;
+            }
+            
+            // Cache GET requests
+            if (!options.method || options.method === 'GET') {
+                setCachedData(endpoint, options, data);
+            }
+            
+            return data;
+        } catch (error) {
+            // Handle network errors
+            if (error.name === 'TypeError' && error.message.includes('NetworkError')) {
+                throw new Error('Unable to connect to the server. Please check your internet connection.');
+            }
+            
+            // Handle JSON parsing errors
+            if (error instanceof SyntaxError) {
+                throw new Error('Invalid response from server. Please try again.');
+            }
+            
+            // If it's our custom error with status, throw it as is
+            if (error.status) {
+                throw error;
+            }
+            
+            // For any other errors
+            throw new Error('An unexpected error occurred. Please try again.');
+        }
+    });
+};
+
 // Auth services
 const authService = {
     login: async (email, password) => {
