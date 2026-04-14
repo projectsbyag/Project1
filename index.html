@@ -56,130 +56,418 @@
         </div>
     </header>
 
-    <div data-user-content="true" id="landingPage"
-        class="min-h-screen flex flex-col justify-between bg-gradient-to-br from-primary via-primary-light to-white dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 text-gray-900 dark:text-white fade-in">
-        <!-- Hero Section -->
-        <header class="w-full px-4 md:px-6 py-6">
-            <div class="max-w-6xl mx-auto flex justify-between items-center">
+    <div data-user-content="true" id="landingPage" class="flex flex-col bg-white dark:bg-gray-950 text-gray-900 dark:text-white fade-in">
+        
+        <!-- Navigation Bar -->
+        <nav class="bg-white dark:bg-gray-900 shadow-sm sticky top-0 z-40">
+            <div class="max-w-7xl mx-auto px-4 md:px-6 py-4 flex justify-between items-center">
                 <div class="flex items-center gap-2">
-                    <div class="h-10 w-10 rounded-full bg-gradient-to-br from-primary to-primaryDark flex items-center justify-center text-white font-bold">
-                        V
+                    <div class="h-10 w-10 rounded-lg bg-gradient-to-br from-primary to-primaryDark flex items-center justify-center text-white font-bold text-lg">
+                        VC
                     </div>
-                    <span class="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Virtual Campus</span>
+                    <span class="text-2xl font-bold bg-gradient-to-r from-primary to-primaryDark bg-clip-text text-transparent">Virtual Campus</span>
                 </div>
-                <nav class="hidden md:flex gap-8 text-lg">
-                    <a href="#features" class="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primaryLight transition">Features</a>
-                    <a href="#about" class="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primaryLight transition">About</a>
-                    <a href="#contact" class="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primaryLight transition">Contact</a>
-                </nav>
-            </div>
-        </header>
-
-        <main class="flex-1 flex flex-col items-center justify-center text-center px-4 w-full">
-            <div class="max-w-4xl mx-auto w-full">
-                <h1 class="text-4xl md:text-6xl font-extrabold mb-4 tracking-tight text-gray-900 dark:text-white opacity-0 animate-fade-in-down">
-                    Empower Your Learning Journey</h1>
-                <p class="text-lg md:text-2xl mb-8 mx-auto text-gray-700 dark:text-gray-300 opacity-0 animate-fade-in-up">
-                    A modern e-learning platform for students and instructors. Manage courses, assignments, resources, and
-                    more—all in one place.
-                </p>
-                <button id="getStartedBtn"
-                    class="px-10 py-4 bg-primary hover:bg-primary-dark rounded-full text-white text-xl font-semibold shadow-lg transition transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-primary-light opacity-0 animate-fade-in">
-                    Get Started
-                </button>
-                <!-- Animated illustration (optional) -->
-                <div class="mt-10 opacity-0 animate-fade-in-delayed">
-                    <svg class="w-64 h-64 mx-auto" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-                        <defs>
-                            <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" style="stop-color:#5D5CDE;stop-opacity:1" />
-                                <stop offset="100%" style="stop-color:#8180E7;stop-opacity:1" />
-                            </linearGradient>
-                        </defs>
-                        <!-- Book -->
-                        <rect x="60" y="50" width="80" height="100" fill="url(#grad1)" rx="5"/>
-                        <!-- Book pages -->
-                        <line x1="100" y1="50" x2="100" y2="150" stroke="white" stroke-width="2"/>
-                        <line x1="75" y1="80" x2="95" y2="80" stroke="white" stroke-width="1.5"/>
-                        <line x1="75" y1="100" x2="95" y2="100" stroke="white" stroke-width="1.5"/>
-                        <line x1="75" y1="120" x2="95" y2="120" stroke="white" stroke-width="1.5"/>
-                        <line x1="105" y1="80" x2="125" y2="80" stroke="white" stroke-width="1.5"/>
-                        <line x1="105" y1="100" x2="125" y2="100" stroke="white" stroke-width="1.5"/>
-                        <line x1="105" y1="120" x2="125" y2="120" stroke="white" stroke-width="1.5"/>
-                    </svg>
+                <div class="hidden md:flex gap-8 items-center">
+                    <a href="#features" class="hover:text-primary dark:hover:text-primaryLight transition font-medium">Features</a>
+                    <a href="#benefits" class="hover:text-primary dark:hover:text-primaryLight transition font-medium">Benefits</a>
+                    <a href="#how-it-works" class="hover:text-primary dark:hover:text-primaryLight transition font-medium">How it Works</a>
                 </div>
             </div>
-        </main>
+        </nav>
 
-        <!-- Features Section -->
-        <section id="features" class="w-full py-16 bg-white dark:bg-gray-800">
-            <div class="max-w-6xl mx-auto px-4 md:px-6">
-                <h2 class="text-3xl md:text-4xl font-bold text-center mb-12 text-gray-900 dark:text-white">
-                    Powerful Features for Learning
-                </h2>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    <div class="group p-8 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
-                        <div class="text-4xl mb-4 text-primary group-hover:scale-110 transition-transform duration-300 text-center">
-                            <i class="fas fa-user-graduate"></i>
+        <!-- Hero Section with Gradients & Animation -->
+        <section class="relative overflow-hidden bg-gradient-to-r from-primary via-primaryLight to-primaryDark dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 py-24 md:py-32">
+            <!-- Decorative Blobs -->
+            <div class="absolute inset-0 overflow-hidden">
+                <div class="absolute -top-40 -right-40 w-96 h-96 bg-white/10 rounded-full blur-3xl animate-pulse"></div>
+                <div class="absolute -bottom-40 -left-40 w-96 h-96 bg-white/5 rounded-full blur-3xl animate-pulse" style="animation-delay: 1s;"></div>
+            </div>
+            
+            <div class="max-w-7xl mx-auto px-4 md:px-6 relative z-10">
+                <div class="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
+                    <!-- Left Content -->
+                    <div class="space-y-6 fade-in-left">
+                        <div>
+                            <span class="inline-block px-4 py-2 bg-white/20 backdrop-blur-md rounded-full text-white text-sm font-semibold mb-4">🚀 Trusted by 500+ Institutions</span>
                         </div>
-                        <h3 class="font-bold text-xl mb-3 text-gray-900 dark:text-white text-center">Student & Instructor Roles</h3>
-                        <p class="text-gray-700 dark:text-gray-300 text-center">
-                            Role-based dashboards, assignments, grading, and feedback for a seamless academic experience.
+                        <h1 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-white leading-tight">
+                            The Future of
+                            <span class="bg-gradient-to-r from-gray-100 via-white to-gray-100 bg-clip-text text-transparent block">
+                                Online Learning
+                            </span>
+                        </h1>
+                        <p class="text-xl text-gray-100 leading-relaxed max-w-lg font-medium">
+                            Empower your students and instructors with an all-in-one platform designed for modern education. Collaborate, learn, and grow in real-time.
                         </p>
+                        <div class="flex flex-col sm:flex-row gap-4 pt-2">
+                            <button id="getStartedBtn" class="px-6 sm:px-8 py-3 sm:py-4 bg-white text-primary font-bold text-base sm:text-lg rounded-lg hover:bg-gray-100 transition transform hover:scale-105 shadow-xl hover:shadow-2xl duration-300">
+                                Start Free Trial
+                            </button>
+                            <button class="px-6 sm:px-8 py-3 sm:py-4 border-2 border-white text-white font-bold text-base sm:text-lg rounded-lg hover:bg-white/10 backdrop-blur-sm transition duration-300">
+                                Watch Demo
+                            </button>
+                        </div>
+                        <p class="text-sm text-gray-200 pt-2">✓ No credit card required • ✓ 14-day free trial • ✓ Cancel anytime</p>
                     </div>
-                    <div class="group p-8 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
-                        <div class="text-4xl mb-4 text-primary group-hover:scale-110 transition-transform duration-300 text-center">
-                            <i class="fas fa-book-open"></i>
-                        </div>
-                        <h3 class="font-bold text-xl mb-3 text-gray-900 dark:text-white text-center">Resource Sharing</h3>
-                        <p class="text-gray-700 dark:text-gray-300 text-center">
-                            Upload files, share links, pin resources, and collaborate in real time with your peers and instructors.
-                        </p>
-                    </div>
-                    <div class="group p-8 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
-                        <div class="text-4xl mb-4 text-primary group-hover:scale-110 transition-transform duration-300 text-center">
-                            <i class="fas fa-comments"></i>
-                        </div>
-                        <h3 class="font-bold text-xl mb-3 text-gray-900 dark:text-white text-center">Discussions & Announcements</h3>
-                        <p class="text-gray-700 dark:text-gray-300 text-center">
-                            Engage in course discussions, receive announcements, and stay updated with notifications.
-                        </p>
+                    
+                    <!-- Right Illustration -->
+                    <div class="relative hidden md:block">
+                        <div class="absolute inset-0 bg-gradient-to-r from-primary to-primaryLight opacity-20 blur-3xl rounded-full"></div>
+                        <svg class="relative w-full h-full max-w-md mx-auto animate-float" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+                            <defs>
+                                <linearGradient id="grad-hero" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#ffffff;stop-opacity:0.95" />
+                                    <stop offset="100%" style="stop-color:#f5f5ff;stop-opacity:0.75" />
+                                </linearGradient>
+                            </defs>
+                            <!-- Laptop -->
+                            <rect x="40" y="60" width="320" height="220" rx="8" fill="url(#grad-hero)" stroke="white" stroke-width="2"/>
+                            <!-- Laptop base -->
+                            <rect x="120" y="280" width="160" height="12" fill="white" opacity="0.4"/>
+                            <polygon points="140,292 260,292 290,350 110,350" fill="white" opacity="0.2" stroke="white" stroke-width="1" opacity="0.3"/>
+                            <!-- Screen content -->
+                            <rect x="60" y="85" width="280" height="10" rx="5" fill="rgba(255,255,255,0.7)"/>
+                            <rect x="60" y="110" width="240" height="8" rx="4" fill="rgba(255,255,255,0.5)"/>
+                            <rect x="60" y="130" width="280" height="8" rx="4" fill="rgba(255,255,255,0.5)"/>
+                            <rect x="60" y="150" width="200" height="8" rx="4" fill="rgba(255,255,255,0.4)"/>
+                            <rect x="60" y="175" width="280" height="70" rx="6" fill="rgba(147,112,219,0.2)"/>
+                            <rect x="60" y="260" width="80" height="8" rx="4" fill="rgba(255,255,255,0.4)"/>
+                            <rect x="155" y="260" width="80" height="8" rx="4" fill="rgba(255,255,255,0.25)"/>
+                            <rect x="250" y="260" width="70" height="8" rx="4" fill="rgba(255,255,255,0.2)"/>
+                        </svg>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- About Section -->
-        <section id="about"
-            class="w-full py-16 px-4 md:px-6 bg-gradient-to-r from-primary-light to-primary dark:from-gray-800 dark:to-gray-900">
-            <div class="max-w-4xl mx-auto text-center">
-                <h2 class="text-3xl md:text-4xl font-bold mb-6 text-white dark:text-white">About Virtual Campus</h2>
-                <p class="text-lg font-semibold text-white dark:text-gray-300 leading-relaxed">
-                    Virtual Campus is designed to make online learning accessible, interactive, and efficient. With
-                    multi-language support, accessibility features, and a mobile-friendly interface, it’s the perfect
-                    solution for modern education.
-                </p>
+        <!-- Social Proof / Stats Section -->
+        <section class="bg-gray-50 dark:bg-gray-900 py-12 md:py-16 border-b border-gray-200 dark:border-gray-800">
+            <div class="max-w-7xl mx-auto px-4 md:px-6">
+                <div class="grid grid-cols-2 md:grid-cols-5 gap-4 md:gap-8 text-center">
+                    <div class="fade-in">
+                        <div class="text-3xl md:text-4xl font-black text-primary mb-2">50K+</div>
+                        <p class="text-xs md:text-sm text-gray-600 dark:text-gray-400 font-medium">Active Students</p>
+                    </div>
+                    <div class="fade-in" style="animation-delay: 0.1s;">
+                        <div class="text-3xl md:text-4xl font-black text-primaryLight mb-2">500+</div>
+                        <p class="text-xs md:text-sm text-gray-600 dark:text-gray-400 font-medium">Institutions</p>
+                    </div>
+                    <div class="fade-in" style="animation-delay: 0.2s;">
+                        <div class="text-3xl md:text-4xl font-black text-primary mb-2">15K+</div>
+                        <p class="text-xs md:text-sm text-gray-600 dark:text-gray-400 font-medium">Instructors</p>
+                    </div>
+                    <div class="fade-in" style="animation-delay: 0.3s;">
+                        <div class="text-3xl md:text-4xl font-black text-primaryLight mb-2">98%</div>
+                        <p class="text-xs md:text-sm text-gray-600 dark:text-gray-400 font-medium">Satisfaction</p>
+                    </div>
+                    <div class="fade-in" style="animation-delay: 0.4s;">
+                        <div class="text-3xl md:text-4xl font-black text-primary mb-2">24/7</div>
+                        <p class="text-xs md:text-sm text-gray-600 dark:text-gray-400 font-medium">Priority Support</p>
+                    </div>
+                </div>
             </div>
         </section>
 
-        <!-- Contact Section -->
-        <footer id="contact"
-            class="w-full py-16 px-4 md:px-6 bg-gradient-to-r from-primary-light to-primary dark:from-gray-800 dark:to-gray-900">
-            <div class="max-w-4xl mx-auto text-center">
-                <h3 class="text-3xl md:text-4xl font-bold text-white mb-6">Get Started Today</h3>
-                <p class="text-lg text-white dark:text-gray-300 mb-6 leading-relaxed">
-                    Join thousands of students and instructors using Virtual Campus to enhance their learning experience.
-                </p>
-                <button id="getStartedBtnFooter"
-                    class="px-8 py-3 bg-white text-primary font-semibold rounded-full hover:bg-gray-100 transition transform hover:scale-105 mb-8">
-                    Sign Up Now
-                </button>
-                <div class="border-t border-white/20 pt-8">
-                    <p class="text-white dark:text-gray-300 mb-2">
-                        Have questions? <a href="mailto:support@virtualcampus.com"
-                            class="font-semibold text-white underline hover:text-gray-100 transition">Contact support</a>
-                    </p>
-                    <p class="text-sm text-gray-100 dark:text-gray-400">&copy; 2026 Virtual Campus. All rights reserved.</p>
+        <!-- Features Section with Premium Cards -->
+        <section id="features" class="py-24 md:py-32 bg-white dark:bg-gray-950">
+            <div class="max-w-7xl mx-auto px-4 md:px-6">
+                <div class="text-center mb-20">
+                    <h2 class="text-4xl md:text-5xl lg:text-6xl font-black mb-6 text-gray-900 dark:text-white">Powerful Features</h2>
+                    <p class="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto font-medium">Everything you need to create an engaging online learning environment</p>
+                </div>
+                
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+                    <!-- Feature Cards avec Hover Effects Premium -->
+                    <div class="group relative p-6 md:p-8 rounded-2xl bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 border border-gray-200 dark:border-gray-700 hover:border-primary/50 dark:hover:border-primary/50 transition-all duration-500 hover:shadow-2xl hover:-translate-y-2">
+                        <div class="absolute inset-0 bg-gradient-to-br from-primary/0 to-primary/0 group-hover:from-primary/5 group-hover:to-primary/5 rounded-2xl transition-all duration-500"></div>
+                        <div class="relative space-y-4">
+                            <div class="w-16 h-16 rounded-xl bg-gradient-to-br from-primary to-primaryDark text-white flex items-center justify-center text-3xl group-hover:scale-125 transition-transform duration-500 shadow-lg">
+                                <i class="fas fa-book-open"></i>
+                            </div>
+                            <h3 class="text-xl md:text-2xl font-bold text-gray-900 dark:text-white">Interactive Courses</h3>
+                            <p class="text-sm md:text-base text-gray-600 dark:text-gray-400 leading-relaxed">Create and manage engaging courses with multimedia support, interactive assessments, and instant feedback mechanisms.</p>
+                        </div>
+                    </div>
+
+                    <div class="group relative p-6 md:p-8 rounded-2xl bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 border border-gray-200 dark:border-gray-700 hover:border-primaryLight/50 dark:hover:border-primaryLight/50 transition-all duration-500 hover:shadow-2xl hover:-translate-y-2">
+                        <div class="absolute inset-0 bg-gradient-to-br from-primaryLight/0 to-primaryLight/0 group-hover:from-primaryLight/5 group-hover:to-primaryLight/5 rounded-2xl transition-all duration-500"></div>
+                        <div class="relative space-y-4">
+                            <div class="w-16 h-16 rounded-xl bg-gradient-to-br from-primaryLight to-primary text-white flex items-center justify-center text-3xl group-hover:scale-125 transition-transform duration-500 shadow-lg">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <h3 class="text-xl md:text-2xl font-bold text-gray-900 dark:text-white">Real-Time Collaboration</h3>
+                            <p class="text-sm md:text-base text-gray-600 dark:text-gray-400 leading-relaxed">Enable students and instructors to collaborate seamlessly with live discussions, group projects, and peer feedback.</p>
+                        </div>
+                    </div>
+
+                    <div class="group relative p-6 md:p-8 rounded-2xl bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 border border-gray-200 dark:border-gray-700 hover:border-primary/50 dark:hover:border-primary/50 transition-all duration-500 hover:shadow-2xl hover:-translate-y-2">
+                        <div class="absolute inset-0 bg-gradient-to-br from-primary/0 to-primary/0 group-hover:from-primary/5 group-hover:to-primary/5 rounded-2xl transition-all duration-500"></div>
+                        <div class="relative space-y-4">
+                            <div class="w-16 h-16 rounded-xl bg-gradient-to-br from-primary to-primaryLight text-white flex items-center justify-center text-3xl group-hover:scale-125 transition-transform duration-500 shadow-lg">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <h3 class="text-xl md:text-2xl font-bold text-gray-900 dark:text-white">Advanced Analytics</h3>
+                            <p class="text-sm md:text-base text-gray-600 dark:text-gray-400 leading-relaxed">Track student progress with detailed analytics and data-driven insights to optimize learning outcomes and interventions.</p>
+                        </div>
+                    </div>
+
+                    <div class="group relative p-6 md:p-8 rounded-2xl bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 border border-gray-200 dark:border-gray-700 hover:border-primaryLight/50 dark:hover:border-primaryLight/50 transition-all duration-500 hover:shadow-2xl hover:-translate-y-2">
+                        <div class="absolute inset-0 bg-gradient-to-br from-primaryLight/0 to-primaryLight/0 group-hover:from-primaryLight/5 group-hover:to-primaryLight/5 rounded-2xl transition-all duration-500"></div>
+                        <div class="relative space-y-4">
+                            <div class="w-16 h-16 rounded-xl bg-gradient-to-br from-primaryLight to-primaryDark text-white flex items-center justify-center text-3xl group-hover:scale-125 transition-transform duration-500 shadow-lg">
+                                <i class="fas fa-file-upload"></i>
+                            </div>
+                            <h3 class="text-xl md:text-2xl font-bold text-gray-900 dark:text-white">Resource Hub</h3>
+                            <p class="text-sm md:text-base text-gray-600 dark:text-gray-400 leading-relaxed">Share and organize learning materials, assignments, and resources all in one intuitive, centralized location.</p>
+                        </div>
+                    </div>
+
+                    <div class="group relative p-6 md:p-8 rounded-2xl bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 border border-gray-200 dark:border-gray-700 hover:border-primary/50 dark:hover:border-primary/50 transition-all duration-500 hover:shadow-2xl hover:-translate-y-2">
+                        <div class="absolute inset-0 bg-gradient-to-br from-primary/0 to-primary/0 group-hover:from-primary/5 group-hover:to-primary/5 rounded-2xl transition-all duration-500"></div>
+                        <div class="relative space-y-4">
+                            <div class="w-16 h-16 rounded-xl bg-gradient-to-br from-primaryDark to-primary text-white flex items-center justify-center text-3xl group-hover:scale-125 transition-transform duration-500 shadow-lg">
+                                <i class="fas fa-bell"></i>
+                            </div>
+                            <h3 class="text-xl md:text-2xl font-bold text-gray-900 dark:text-white">Smart Notifications</h3>
+                            <p class="text-sm md:text-base text-gray-600 dark:text-gray-400 leading-relaxed">Keep everyone informed with intelligent notifications about course updates, deadlines, and important announcements.</p>
+                        </div>
+                    </div>
+
+                    <div class="group relative p-6 md:p-8 rounded-2xl bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 border border-gray-200 dark:border-gray-700 hover:border-primaryLight/50 dark:hover:border-primaryLight/50 transition-all duration-500 hover:shadow-2xl hover:-translate-y-2">
+                        <div class="absolute inset-0 bg-gradient-to-br from-primaryLight/0 to-primaryLight/0 group-hover:from-primaryLight/5 group-hover:to-primaryLight/5 rounded-2xl transition-all duration-500"></div>
+                        <div class="relative space-y-4">
+                            <div class="w-16 h-16 rounded-xl bg-gradient-to-br from-primary to-primaryDark text-white flex items-center justify-center text-3xl group-hover:scale-125 transition-transform duration-500 shadow-lg">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <h3 class="text-xl md:text-2xl font-bold text-gray-900 dark:text-white">Bank-Level Security</h3>
+                            <p class="text-sm md:text-base text-gray-600 dark:text-gray-400 leading-relaxed">Enterprise-grade security with encryption, role-based access control, and full compliance with international standards.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Benefits Section -->
+        <section id="benefits" class="py-24 md:py-32 bg-gradient-to-r from-primary via-primaryLight to-primaryDark dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 text-white relative overflow-hidden">
+            <!-- Background Pattern -->
+            <div class="absolute inset-0 opacity-10">
+                <div class="absolute top-1/4 left-0 w-96 h-96 bg-white rounded-full blur-3xl"></div>
+                <div class="absolute bottom-0 right-0 w-96 h-96 bg-white rounded-full blur-3xl"></div>
+            </div>
+            
+            <div class="max-w-7xl mx-auto px-4 md:px-6 relative z-10">
+                <div class="grid md:grid-cols-2 gap-8 md:gap-16 items-center">
+                    <!-- Left Content -->
+                    <div class="space-y-10">
+                        <div>
+                            <h2 class="text-4xl md:text-5xl lg:text-6xl font-black mb-6">Why Choose
+                                <span class="block bg-gradient-to-r from-gray-100 to-white bg-clip-text text-transparent">Virtual Campus?</span>
+                            </h2>
+                            <p class="text-xl text-gray-100 font-medium">Transform your educational institution with a platform built for success and student outcomes</p>
+                        </div>
+                        
+                        <div class="space-y-6">
+                            <div class="flex gap-5 group cursor-pointer">
+                                <div class="w-14 h-14 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center flex-shrink-0 group-hover:bg-white/30 transition-all duration-300">
+                                    <i class="fas fa-check text-2xl"></i>
+                                </div>
+                                <div class="pt-1">
+                                    <h3 class="font-bold text-lg mb-2">Increase Engagement by 45%</h3>
+                                    <p class="text-gray-200 leading-relaxed">Interactive features and real-time collaboration keep students actively engaged in their learning journey</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex gap-5 group cursor-pointer">
+                                <div class="w-14 h-14 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center flex-shrink-0 group-hover:bg-white/30 transition-all duration-300">
+                                    <i class="fas fa-check text-2xl"></i>
+                                </div>
+                                <div class="pt-1">
+                                    <h3 class="font-bold text-lg mb-2">Save 20+ Hours Monthly</h3>
+                                    <p class="text-gray-200 leading-relaxed">Automated grading and intelligent workflows dramatically reduce administrative workload</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex gap-5 group cursor-pointer">
+                                <div class="w-14 h-14 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center flex-shrink-0 group-hover:bg-white/30 transition-all duration-300">
+                                    <i class="fas fa-check text-2xl"></i>
+                                </div>
+                                <div class="pt-1">
+                                    <h3 class="font-bold text-lg mb-2">Boost Success Rates by 30%</h3>
+                                    <p class="text-gray-200 leading-relaxed">Data-driven insights help identify at-risk students early for timely interventions</p>
+                                </div>
+                            </div>
+
+                            <div class="flex gap-5 group cursor-pointer">
+                                <div class="w-14 h-14 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center flex-shrink-0 group-hover:bg-white/30 transition-all duration-300">
+                                    <i class="fas fa-check text-2xl"></i>
+                                </div>
+                                <div class="pt-1">
+                                    <h3 class="font-bold text-lg mb-2">Multi-Language Support</h3>
+                                    <p class="text-gray-200 leading-relaxed">Support students and instructors in 15+ languages with full localization for global reach</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Right Illustration -->
+                    <div class="relative">
+                        <div class="absolute inset-0 bg-white/5 blur-3xl rounded-full"></div>
+                        <svg class="relative w-full h-full max-w-md mx-auto" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+                            <defs>
+                                <linearGradient id="grad-benefit" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#ffffff;stop-opacity:0.3" />
+                                    <stop offset="100%" style="stop-color:#ffffff;stop-opacity:0.05" />
+                                </linearGradient>
+                            </defs>
+                            <!-- Growth Chart Bars -->
+                            <rect x="40" y="280" width="45" height="90" fill="url(#grad-benefit)" stroke="white" stroke-width="2" rx="4" opacity="0.8"/>
+                            <rect x="105" y="220" width="45" height="150" fill="url(#grad-benefit)" stroke="white" stroke-width="2" rx="4"/>
+                            <rect x="170" y="140" width="45" height="230" fill="url(#grad-benefit)" stroke="white" stroke-width="2" rx="4"/>
+                            <rect x="235" y="60" width="45" height="310" fill="url(#grad-benefit)" stroke="white" stroke-width="2" rx="4"/>
+                            <rect x="300" y="80" width="45" height="290" fill="url(#grad-benefit)" stroke="white" stroke-width="2" rx="4" opacity="0.9"/>
+                            <!-- Trend Line -->
+                            <polyline points="62,265 127,190 192,110 257,78 322,70" fill="none" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+                            <!-- Grid Lines -->
+                            <line x1="30" y1="280" x2="350" y2="280" stroke="white" stroke-width="1" opacity="0.2"/>
+                            <line x1="30" y1="220" x2="350" y2="220" stroke="white" stroke-width="1" opacity="0.15"/>
+                            <line x1="30" y1="160" x2="350" y2="160" stroke="white" stroke-width="1" opacity="0.15"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- How It Works Section -->
+        <section id="how-it-works" class="py-24 md:py-32 bg-white dark:bg-gray-950">
+            <div class="max-w-7xl mx-auto px-4 md:px-6">
+                <div class="text-center mb-20">
+                    <h2 class="text-4xl md:text-5xl lg:text-6xl font-black mb-6">Get Started in 3 Steps</h2>
+                    <p class="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto font-medium">Launch your learning platform in minutes, not weeks</p>
+                </div>
+                
+                <div class="grid md:grid-cols-3 gap-6 md:gap-12 relative">
+                    <!-- Connecting Line (hidden on mobile) -->
+                    <div class="hidden md:block absolute top-24 left-[16.666%] right-[16.666%] h-1 bg-gradient-to-r from-primary via-primaryLight to-primaryDark"></div>
+
+                    <!-- Step 1 -->
+                    <div class="relative group cursor-pointer">
+                        <div class="space-y-6">
+                            <div class="w-20 h-20 rounded-full bg-gradient-to-br from-primary to-primaryDark text-white flex items-center justify-center text-3xl font-bold mx-auto relative z-10 group-hover:scale-110 transition-transform duration-500 shadow-xl">
+                                1
+                            </div>
+                            <div class="space-y-3 text-center">
+                                <h3 class="text-2xl font-bold text-gray-900 dark:text-white">Create Your Account</h3>
+                                <p class="text-gray-600 dark:text-gray-400 leading-relaxed">Sign up in seconds with our intuitive setup wizard. No technical knowledge required—get up and running instantly.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 2 -->
+                    <div class="relative group cursor-pointer">
+                        <div class="space-y-6">
+                            <div class="w-20 h-20 rounded-full bg-gradient-to-br from-primaryLight to-primary text-white flex items-center justify-center text-3xl font-bold mx-auto relative z-10 group-hover:scale-110 transition-transform duration-500 shadow-xl">
+                                2
+                            </div>
+                            <div class="space-y-3 text-center">
+                                <h3 class="text-2xl font-bold text-gray-900 dark:text-white">Build Your Courses</h3>
+                                <p class="text-gray-600 dark:text-gray-400 leading-relaxed">Add content, create assignments, and customize your learning paths with intuitive drag-and-drop tools.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 3 -->
+                    <div class="relative group cursor-pointer">
+                        <div class="space-y-6">
+                            <div class="w-20 h-20 rounded-full bg-gradient-to-br from-primaryDark to-primary text-white flex items-center justify-center text-3xl font-bold mx-auto relative z-10 group-hover:scale-110 transition-transform duration-500 shadow-xl">
+                                3
+                            </div>
+                            <div class="space-y-3 text-center">
+                                <h3 class="text-2xl font-bold text-gray-900 dark:text-white">Invite Your Students</h3>
+                                <p class="text-gray-600 dark:text-gray-400 leading-relaxed">Share enrollment links, manage rosters, and start teaching immediately with your ready-to-go platform.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="py-20 md:py-28 bg-gradient-to-r from-primaryDark via-primary to-primaryLight dark:from-gray-800 dark:via-gray-900 dark:to-gray-800 relative overflow-hidden">
+            <div class="absolute inset-0 opacity-5">
+                <div class="absolute top-0 left-0 w-96 h-96 bg-white rounded-full blur-3xl"></div>
+                <div class="absolute bottom-0 right-0 w-96 h-96 bg-white rounded-full blur-3xl"></div>
+            </div>
+            
+            <div class="max-w-4xl mx-auto px-4 md:px-6 text-center relative z-10">
+                <h2 class="text-4xl md:text-5xl lg:text-6xl font-black text-white mb-6">Ready to Transform Education?</h2>
+                <p class="text-xl text-gray-100 mb-10 font-medium">Join thousands of institutions already using Virtual Campus. Start your free 14-day trial today.</p>
+                <div class="flex flex-col sm:flex-row gap-4 md:gap-5 justify-center">
+                    <button id="getStartedBtnFooter" class="px-6 md:px-10 py-4 md:py-5 bg-white text-primary font-bold text-base md:text-lg rounded-lg hover:bg-gray-100 transition transform hover:scale-105 shadow-2xl hover:shadow-3xl duration-300">
+                        Start Free Trial
+                    </button>
+                    <button class="px-6 md:px-10 py-4 md:py-5 border-3 border-white text-white font-bold text-base md:text-lg rounded-lg hover:bg-white/15 backdrop-blur-sm transition duration-300">
+                        Schedule a Demo
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="bg-gray-900 dark:bg-gray-950 text-gray-300 py-16 border-t border-gray-800">
+            <div class="max-w-7xl mx-auto px-4 md:px-6">
+                <div class="grid md:grid-cols-4 gap-12 mb-12">
+                    <!-- Brand -->
+                    <div>
+                        <div class="flex items-center gap-2 mb-4">
+                            <div class="h-10 w-10 rounded-lg bg-gradient-to-br from-primary to-primaryDark flex items-center justify-center text-white font-bold text-lg">
+                                VC
+                            </div>
+                            <span class="font-bold text-white text-lg">Virtual Campus</span>
+                        </div>
+                        <p class="text-sm text-gray-400 leading-relaxed">Transforming education through innovative technology and student-centric design.</p>
+                    </div>
+                    <!-- Product -->
+                    <div>
+                        <h3 class="font-bold text-white mb-4 text-sm uppercase tracking-wide">Product</h3>
+                        <ul class="space-y-3 text-sm">
+                            <li><a href="#features" class="text-gray-400 hover:text-primary transition duration-300">Features</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-primary transition duration-300">Pricing</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-primary transition duration-300">Security</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-primary transition duration-300">Roadmap</a></li>
+                        </ul>
+                    </div>
+                    <!-- Company -->
+                    <div>
+                        <h3 class="font-bold text-white mb-4 text-sm uppercase tracking-wide">Company</h3>
+                        <ul class="space-y-3 text-sm">
+                            <li><a href="#" class="text-gray-400 hover:text-primary transition duration-300">About</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-primary transition duration-300">Blog</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-primary transition duration-300">Careers</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-primary transition duration-300">Contact</a></li>
+                        </ul>
+                    </div>
+                    <!-- Legal -->
+                    <div>
+                        <h3 class="font-bold text-white mb-4 text-sm uppercase tracking-wide">Legal</h3>
+                        <ul class="space-y-3 text-sm">
+                            <li><a href="#" class="text-gray-400 hover:text-primary transition duration-300">Privacy Policy</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-primary transition duration-300">Terms of Service</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-primary transition duration-300">Compliance</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-primary transition duration-300">Cookie Policy</a></li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="border-t border-gray-800 pt-8">
+                    <div class="flex flex-col md:flex-row justify-between items-center gap-6">
+                        <p class="text-sm text-gray-400">&copy; 2026 Virtual Campus. All rights reserved. Made with ❤️ for education.</p>
+                        <div class="flex gap-6">
+                            <a href="#" class="text-gray-400 hover:text-primary transition duration-300 text-xl"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="text-gray-400 hover:text-primary transition duration-300 text-xl"><i class="fab fa-linkedin"></i></a>
+                            <a href="#" class="text-gray-400 hover:text-primary transition duration-300 text-xl"><i class="fab fa-facebook"></i></a>
+                            <a href="#" class="text-gray-400 hover:text-primary transition duration-300 text-xl"><i class="fab fa-instagram"></i></a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </footer>
@@ -266,8 +554,8 @@
 
 
         <!-- Main content area -->
-        <main class="flex-1 overflow-y-auto">
-            <div id="content" class="p-4  fade-in">
+        <main class="flex-1 overflow-y-auto w-full">
+            <div id="content" class="p-4 md:p-6 fade-in w-full">
                 <!-- Content will be dynamically loaded here -->
                 <div class="flex justify-center items-center h-64">
                     <div class="spinner w-12 h-12 border-4 border-gray-300 dark:border-gray-600 rounded-full"></div>
@@ -300,16 +588,17 @@
             try {
                 const observer = new PerformanceObserver((list) => {
                     for (const entry of list.getEntries()) {
-                        if (entry.duration > 1000) {
-                            console.warn(`Slow operation: ${entry.name} took ${entry.duration}ms`);
+                        if (entry.duration > 100) {
+                            console.warn('Slow Performance:', entry);
                         }
                     }
                 });
-                observer.observe({entryTypes: ['measure', 'navigation']});
-            } catch (e) {}
+                observer.observe({ entryTypes: ['largest-contentful-paint', 'first-input'] });
+            } catch (e) {
+                console.log('Performance Observer not supported:', e);
+            }
         }
     </script>
-
 </body>
 
 </html>

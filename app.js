@@ -50,7 +50,7 @@ app.use(
             styleSrc: ["'self'", "'unsafe-inline'", "https://cdnjs.cloudflare.com"],
             scriptSrcAttr: ["'self'", "'unsafe-inline'"],
             imgSrc: ["'self'", "data:", "http://localhost:5000/uploads", "https://picsum.photos", "https://fastly.picsum.photos"],
-            connectSrc: ["'self'", "http://localhost:5000", "http://127.0.0.1:5500"],
+            connectSrc: ["'self'", "http://localhost:5000", "http://127.0.0.1:5500", "https://project1-1bz0.onrender.com"],
             fontSrc: ["'self'", "data:", "https://cdnjs.cloudflare.com"],
             objectSrc: ["'none'"],
             baseUri: ["'self'"]

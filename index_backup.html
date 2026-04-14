@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Virtual Campus - E-learning Platform</title>
+    <meta name="supported-languages" content="en,fr,es,de,ha,ar,zh,ja">
+    <meta name="description" content="A modern e-learning platform for students and instructors">
+    
+    <!-- Tailwind CSS (production build) -->
+    <link rel="stylesheet" href="static/css/output.css">
+    
+    <!-- Custom styles (overrides) -->
+    <link rel="stylesheet" href="static/css/styles.css">
+    
+    <!-- Font Awesome icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Resource hints for external scripts -->
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+
+    <!-- Service Worker for offline caching -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('static/sw.js').catch(err => console.log('SW registration failed:', err));
+            });
+        }
+    </script>
+</head>
+
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-200 min-h-screen">
+    <!-- Mobile Header -->
+    <header id="mobileHeader"
+        class="md:hidden bg-white dark:bg-gray-800 shadow-md py-3 px-4 flex justify-between items-center">
+        <div class="flex items-center">
+            <button id="mobileMenuBtn" class="mr-3 text-gray-700 dark:text-gray-300">
+                <i class="fas fa-bars text-xl"></i>
+            </button>
+            <h1 class="text-xl font-bold text-primary dark:text-primaryLight">Virtual Campus</h1>
+        </div>
+        <div class="flex items-center">
+            <button id="toggleDarkModeBtn" class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700">
+                <i class="fas fa-moon dark:hidden"></i>
+                <i class="fas fa-sun hidden dark:block text-yellow-400"></i>
+            </button>
+            <div class="relative ml-3">
+                <button id="mobileProfileBtn" class="flex items-center">
+                    <div class="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-primaryDark flex items-center justify-center text-white font-bold text-sm">
+                        U
+                    </div>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div data-user-content="true" id="landingPage"
+        class="min-h-screen flex flex-col justify-between bg-gradient-to-br from-primary via-primary-light to-white dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 text-gray-900 dark:text-white fade-in">
+        <!-- Hero Section -->
+        <header class="w-full px-4 md:px-6 py-6">
+            <div class="max-w-6xl mx-auto flex justify-between items-center">
+                <div class="flex items-center gap-2">
+                    <div class="h-10 w-10 rounded-full bg-gradient-to-br from-primary to-primaryDark flex items-center justify-center text-white font-bold">
+                        V
+                    </div>
+                    <span class="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Virtual Campus</span>
+                </div>
+                <nav class="hidden md:flex gap-8 text-lg">
+                    <a href="#features" class="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primaryLight transition">Features</a>
+                    <a href="#about" class="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primaryLight transition">About</a>
+                    <a href="#contact" class="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primaryLight transition">Contact</a>
+                </nav>
+            </div>
+        </header>
+
+        <main class="flex-1 flex flex-col items-center justify-center text-center px-4 w-full">
+            <div class="max-w-4xl mx-auto w-full">
+                <h1 class="text-4xl md:text-6xl font-extrabold mb-4 tracking-tight text-gray-900 dark:text-white opacity-0 animate-fade-in-down">
+                    Empower Your Learning Journey</h1>
+                <p class="text-lg md:text-2xl mb-8 mx-auto text-gray-700 dark:text-gray-300 opacity-0 animate-fade-in-up">
+                    A modern e-learning platform for students and instructors. Manage courses, assignments, resources, and
+                    more—all in one place.
+                </p>
+                <button id="getStartedBtn"
+                    class="px-10 py-4 bg-primary hover:bg-primary-dark rounded-full text-white text-xl font-semibold shadow-lg transition transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-primary-light opacity-0 animate-fade-in">
+                    Get Started
+                </button>
+                <!-- Animated illustration (optional) -->
+                <div class="mt-10 opacity-0 animate-fade-in-delayed">
+                    <svg class="w-64 h-64 mx-auto" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#5D5CDE;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#8180E7;stop-opacity:1" />
+                            </linearGradient>
+                        </defs>
+                        <!-- Book -->
+                        <rect x="60" y="50" width="80" height="100" fill="url(#grad1)" rx="5"/>
+                        <!-- Book pages -->
+                        <line x1="100" y1="50" x2="100" y2="150" stroke="white" stroke-width="2"/>
+                        <line x1="75" y1="80" x2="95" y2="80" stroke="white" stroke-width="1.5"/>
+                        <line x1="75" y1="100" x2="95" y2="100" stroke="white" stroke-width="1.5"/>
+                        <line x1="75" y1="120" x2="95" y2="120" stroke="white" stroke-width="1.5"/>
+                        <line x1="105" y1="80" x2="125" y2="80" stroke="white" stroke-width="1.5"/>
+                        <line x1="105" y1="100" x2="125" y2="100" stroke="white" stroke-width="1.5"/>
+                        <line x1="105" y1="120" x2="125" y2="120" stroke="white" stroke-width="1.5"/>
+                    </svg>
+                </div>
+            </div>
+        </main>
+
+        <!-- Features Section -->
+        <section id="features" class="w-full py-16 bg-white dark:bg-gray-800">
+            <div class="max-w-6xl mx-auto px-4 md:px-6">
+                <h2 class="text-3xl md:text-4xl font-bold text-center mb-12 text-gray-900 dark:text-white">
+                    Powerful Features for Learning
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="group p-8 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+                        <div class="text-4xl mb-4 text-primary group-hover:scale-110 transition-transform duration-300 text-center">
+                            <i class="fas fa-user-graduate"></i>
+                        </div>
+                        <h3 class="font-bold text-xl mb-3 text-gray-900 dark:text-white text-center">Student & Instructor Roles</h3>
+                        <p class="text-gray-700 dark:text-gray-300 text-center">
+                            Role-based dashboards, assignments, grading, and feedback for a seamless academic experience.
+                        </p>
+                    </div>
+                    <div class="group p-8 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+                        <div class="text-4xl mb-4 text-primary group-hover:scale-110 transition-transform duration-300 text-center">
+                            <i class="fas fa-book-open"></i>
+                        </div>
+                        <h3 class="font-bold text-xl mb-3 text-gray-900 dark:text-white text-center">Resource Sharing</h3>
+                        <p class="text-gray-700 dark:text-gray-300 text-center">
+                            Upload files, share links, pin resources, and collaborate in real time with your peers and instructors.
+                        </p>
+                    </div>
+                    <div class="group p-8 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+                        <div class="text-4xl mb-4 text-primary group-hover:scale-110 transition-transform duration-300 text-center">
+                            <i class="fas fa-comments"></i>
+                        </div>
+                        <h3 class="font-bold text-xl mb-3 text-gray-900 dark:text-white text-center">Discussions & Announcements</h3>
+                        <p class="text-gray-700 dark:text-gray-300 text-center">
+                            Engage in course discussions, receive announcements, and stay updated with notifications.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about"
+            class="w-full py-16 px-4 md:px-6 bg-gradient-to-r from-primary-light to-primary dark:from-gray-800 dark:to-gray-900">
+            <div class="max-w-4xl mx-auto text-center">
+                <h2 class="text-3xl md:text-4xl font-bold mb-6 text-white dark:text-white">About Virtual Campus</h2>
+                <p class="text-lg font-semibold text-white dark:text-gray-300 leading-relaxed">
+                    Virtual Campus is designed to make online learning accessible, interactive, and efficient. With
+                    multi-language support, accessibility features, and a mobile-friendly interface, it’s the perfect
+                    solution for modern education.
+                </p>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <footer id="contact"
+            class="w-full py-16 px-4 md:px-6 bg-gradient-to-r from-primary-light to-primary dark:from-gray-800 dark:to-gray-900">
+            <div class="max-w-4xl mx-auto text-center">
+                <h3 class="text-3xl md:text-4xl font-bold text-white mb-6">Get Started Today</h3>
+                <p class="text-lg text-white dark:text-gray-300 mb-6 leading-relaxed">
+                    Join thousands of students and instructors using Virtual Campus to enhance their learning experience.
+                </p>
+                <button id="getStartedBtnFooter"
+                    class="px-8 py-3 bg-white text-primary font-semibold rounded-full hover:bg-gray-100 transition transform hover:scale-105 mb-8">
+                    Sign Up Now
+                </button>
+                <div class="border-t border-white/20 pt-8">
+                    <p class="text-white dark:text-gray-300 mb-2">
+                        Have questions? <a href="mailto:support@virtualcampus.com"
+                            class="font-semibold text-white underline hover:text-gray-100 transition">Contact support</a>
+                    </p>
+                    <p class="text-sm text-gray-100 dark:text-gray-400">&copy; 2026 Virtual Campus. All rights reserved.</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <div id="appContainer" class="flex flex-col md:flex-row min-h-screen" style="display:none;">
+        <!-- Sidebar navigation -->
+
+        <aside id="sidebar"
+            class="w-64 bg-white dark:bg-gray-800 shadow-md top-0 bottom-0 left-0 overflow-y-auto">
+            <div class="p-4 flex items-center justify-between">
+                <h1 class="text-xl font-bold text-primary dark:text-primaryLight">Virtual Campus</h1>
+                <button id="toggleSidebarBtn"
+                    class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 md:hidden">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+            <nav class="mt-4">
+                <div class="px-4 py-2 text-xs text-gray-500 dark:text-gray-400 uppercase">Main</div>
+                <a href="#"
+                    class="nav-link flex items-center py-3 px-4 bg-gray-100 dark:bg-gray-700 text-primary dark:text-primaryLight"
+                    data-view="dashboard">
+                    <i class="fas fa-home w-6"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#" class="nav-link flex items-center py-3 px-4 hover:bg-gray-100 dark:hover:bg-gray-700"
+                    data-view="courses">
+                    <i class="fas fa-book w-6"></i>
+                    <span>My Courses</span>
+                </a>
+                <a href="#" class="nav-link flex items-center py-3 px-4 hover:bg-gray-100 dark:hover:bg-gray-700"
+                    data-view="resources">
+                    <i class="fas fa-file w-6"></i>
+                    <span>Resources</span>
+                </a>
+                <a href="#" class="nav-link flex items-center py-3 px-4 hover:bg-gray-100 dark:hover:bg-gray-700"
+                    data-view="assignments">
+                    <i class="fas fa-tasks w-6"></i>
+                    <span>Assignments</span>
+                </a>
+                <a href="#" class="nav-link flex items-center py-3 px-4 hover:bg-gray-100 dark:hover:bg-gray-700"
+                    data-view="discussions">
+                    <i class="fas fa-comments w-6"></i>
+                    <span>Discussions</span>
+                </a>
+
+                <div class="px-4 py-2 mt-6 text-xs text-gray-500 dark:text-gray-400 uppercase">Settings</div>
+                <a href="#" class="nav-link flex items-center py-3 px-4 hover:bg-gray-100 dark:hover:bg-gray-700"
+                    data-view="profile">
+                    <i class="fas fa-user w-6"></i>
+                    <span>Profile</span>
+                </a>
+                <a href="#" class="nav-link flex items-center py-3 px-4 hover:bg-gray-100 dark:hover:bg-gray-700"
+                    data-view="settings">
+                    <i class="fas fa-cog w-6"></i>
+                    <span>Settings</span>
+                </a>
+            </nav>
+
+            <div id="sidebarUserInfo" class="mt-auto p-4 border-t border-gray-200 dark:border-gray-700">
+                <div class="flex items-center">
+                    <img id="sidebarProfileImage" src="https://picsum.photos/id/1005/40/40" alt="Profile"
+                        class="w-10 h-10 rounded-full">
+                    <div class="ml-3">
+                        <p id="sidebarUserName" class="font-medium">Log in first</p>
+                        <p id="sidebarUserRole" class="text-sm text-gray-500 dark:text-gray-400">...</p>
+                    </div>
+
+                    <button id="desktopDarkModeBtn"
+                        class="ml-auto p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700">
+                        <i class="fas fa-moon dark:hidden"></i>
+                        <i class="fas fa-sun hidden dark:block text-yellow-400"></i>
+                    </button>
+                </div>
+            </div>
+            <!-- Logout Button -->
+            <a href="#" id="logoutBtn"
+                class="nav-link flex items-center py-3 px-4 hover:bg-red-100 dark:hover:bg-red-700 text-red-500 dark:text-red-400">
+                <i class="fas fa-sign-out-alt w-6"></i>
+                <span>Logout</span>
+            </a>
+        </aside>
+
+
+
+        <!-- Main content area -->
+        <main class="flex-1 overflow-y-auto">
+            <div id="content" class="p-4  fade-in">
+                <!-- Content will be dynamically loaded here -->
+                <div class="flex justify-center items-center h-64">
+                    <div class="spinner w-12 h-12 border-4 border-gray-300 dark:border-gray-600 rounded-full"></div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Mobile menu modal backdrop -->
+    <div id="modalBackdrop" class=" inset-0 bg-black bg-opacity-50 z-10 hidden"></div>
+
+    <!-- Toast notification -->
+    <div id="toast"
+        class="fixed bottom-4 right-4 p-4 rounded-lg shadow-lg bg-white dark:bg-gray-800 border-l-4 border-green-500 transform translate-y-20 opacity-0 transition-all duration-300 z-50 hidden">
+        <div id="toastMessage" class="text-gray-800 dark:text-gray-200"></div>
+    </div>
+
+    <!-- Scripts - Deferred for faster initial page load -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js" defer></script>
+    <script src="static/js/performance.js" defer></script>
+    <script src="static/js/utils.js" defer></script>
+    <script src="static/js/api.js" defer></script>
+    <script src="static/js/main.js" defer></script>
+    <script src="static/js/views.js" defer></script>
+    
+    <!-- Performance observer for debugging -->
+    <script defer>
+        if (window.PerformanceObserver) {
+            try {
+                const observer = new PerformanceObserver((list) => {
+                    for (const entry of list.getEntries()) {
+                        if (entry.duration > 1000) {
+                            console.warn(`Slow operation: ${entry.name} took ${entry.duration}ms`);
+                        }
+                    }
+                });
+                observer.observe({entryTypes: ['measure', 'navigation']});
+            } catch (e) {}
+        }
+    </script>
+
+</body>
+
+</html>
