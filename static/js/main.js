@@ -279,7 +279,6 @@ document.addEventListener('DOMContentLoaded', function () {
         mobileMenuBtn.addEventListener('click', function () {
             sidebar.classList.remove('hidden');
             if (modalBackdrop) modalBackdrop.classList.remove('hidden');
-            if (mainContent) mainContent.classList.add('md:ml-64');
         });
     }
 
@@ -287,7 +286,6 @@ document.addEventListener('DOMContentLoaded', function () {
     function hideSidebar() {
         sidebar.classList.add('hidden');
         if (modalBackdrop) modalBackdrop.classList.add('hidden');
-        if (mainContent) mainContent.classList.remove('md:ml-64');
     }
 
     if (toggleSidebarBtn) {
@@ -301,12 +299,10 @@ document.addEventListener('DOMContentLoaded', function () {
     function handleResize() {
         if (window.innerWidth >= 768) { // md breakpoint
             sidebar.classList.remove('hidden');
-            if (mainContent) mainContent.classList.add('md:ml-64');
             if (modalBackdrop) modalBackdrop.classList.add('hidden');
         } else {
             // On mobile, hide sidebar by default
             sidebar.classList.add('hidden');
-            if (mainContent) mainContent.classList.remove('md:ml-64');
             if (modalBackdrop) modalBackdrop.classList.add('hidden');
         }
     }
@@ -387,15 +383,9 @@ function toggleSidebar() {
     sidebar.classList.toggle('hidden');
     modalBackdrop.classList.toggle('hidden');
 
-    // Main content area
-    const mainContent = document.querySelector('main.flex-1');
     if (sidebar.classList.contains('hidden')) {
-        // Sidebar is hidden, remove margin
-        mainContent.classList.remove('md:ml-64');
         modalBackdrop.classList.add('hidden');
     } else {
-        // Sidebar is visible, add margin
-        mainContent.classList.add('md:ml-64');
         modalBackdrop.classList.remove('hidden');
     }
 }
