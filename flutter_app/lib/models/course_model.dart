@@ -33,7 +33,7 @@ class CourseModel {
 
     return CourseModel(
       id: json['_id'] ?? json['id'] ?? '',
-      title: json['title'] ?? '',
+      title: json['name'] ?? json['title'] ?? '',
       code: json['code'] ?? '',
       description: json['description'] ?? '',
       instructorName: instructor ?? json['instructorName'] ?? 'Instructor',

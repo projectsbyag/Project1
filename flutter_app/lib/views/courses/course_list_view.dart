@@ -246,7 +246,11 @@ class _CourseListViewState extends State<CourseListView> {
                                     children: [
                                       Text(
                                         course.title,
-                                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold, 
+                                          fontSize: 16,
+                                          color: isDark ? Colors.white : Colors.black,
+                                        ),
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
                                       ),

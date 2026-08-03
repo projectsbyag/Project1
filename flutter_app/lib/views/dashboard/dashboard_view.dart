@@ -315,7 +315,11 @@ class DashboardView extends StatelessWidget {
                         children: [
                           Text(
                             course.title,
-                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold, 
+                              fontSize: 15,
+                              color: isDark ? Colors.white : Colors.black,
+                            ),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -532,6 +536,20 @@ class DashboardView extends StatelessWidget {
   }
 
   Widget _buildCalendarCard(BuildContext context, bool isDark) {
+    final dataProvider = Provider.of<DataProvider>(context);
+    final assignments = dataProvider.assignments;
+    
+    final now = DateTime.now();
+    final firstDayOfMonth = DateTime(now.year, now.month, 1);
+    final lastDayOfMonth = DateTime(now.year, now.month + 1, 0);
+    
+    final daysInMonth = lastDayOfMonth.day;
+    final startWeekday = firstDayOfMonth.weekday == 7 ? 0 : firstDayOfMonth.weekday;
+    final totalCells = startWeekday + daysInMonth;
+    final rowCount = (totalCells / 7).ceil();
+    
+    final monthName = DateFormat('MMMM yyyy').format(now);
+    
     const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
     return Container(
@@ -544,7 +562,7 @@ class DashboardView extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('July 2026', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+          Text(monthName, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
           const SizedBox(height: 16),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -556,32 +574,54 @@ class DashboardView extends StatelessWidget {
             physics: const NeverScrollableScrollPhysics(),
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 7,
-              mainAxisExtent: 36,
+              mainAxisExtent: 44, // Adjusted height for dot
             ),
-            itemCount: 35, // offset 3 empty cells + 31 days
+            itemCount: rowCount * 7,
             itemBuilder: (context, index) {
-              if (index < 3) return const SizedBox();
-              final dayNum = index - 2;
-              final isToday = dayNum == 30;
+              if (index < startWeekday || index >= startWeekday + daysInMonth) {
+                return const SizedBox();
+              }
+              final dayNum = index - startWeekday + 1;
+              final isToday = dayNum == now.day;
+              
+              final currentDayDate = DateTime(now.year, now.month, dayNum);
+              final hasAssignment = assignments.any((a) => a.dueDate.year == currentDayDate.year && a.dueDate.month == currentDayDate.month && a.dueDate.day == currentDayDate.day);
 
               return Center(
-                child: Container(
-                  width: 32,
-                  height: 32,
-                  decoration: BoxDecoration(
-                    color: isToday ? AppTheme.primaryColor : Colors.transparent,
-                    shape: BoxShape.circle,
-                  ),
-                  child: Center(
-                    child: Text(
-                      '$dayNum',
-                      style: TextStyle(
-                        color: isToday ? Colors.white : (isDark ? Colors.white : Colors.black87),
-                        fontWeight: isToday ? FontWeight.bold : FontWeight.normal,
-                        fontSize: 13,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      width: 28,
+                      height: 28,
+                      decoration: BoxDecoration(
+                        color: isToday ? AppTheme.primaryColor : Colors.transparent,
+                        shape: BoxShape.circle,
+                      ),
+                      child: Center(
+                        child: Text(
+                          '$dayNum',
+                          style: TextStyle(
+                            color: isToday ? Colors.white : (isDark ? Colors.white : Colors.black87),
+                            fontWeight: isToday ? FontWeight.bold : FontWeight.normal,
+                            fontSize: 13,
+                          ),
+                        ),
                       ),
                     ),
-                  ),
+                    if (hasAssignment)
+                      Container(
+                        margin: const EdgeInsets.only(top: 2),
+                        width: 4,
+                        height: 4,
+                        decoration: const BoxDecoration(
+                          color: Colors.red,
+                          shape: BoxShape.circle,
+                        ),
+                      )
+                    else
+                      const SizedBox(height: 6),
+                  ],
                 ),
               );
             },
