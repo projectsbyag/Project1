@@ -1626,14 +1626,14 @@ async function loadCourseDetail(courseId) {
         const newDiscussionBtn = document.getElementById('newDiscussionBtn');
         if (newDiscussionBtn) {
             newDiscussionBtn.addEventListener('click', () => {
-                showNewDiscussionModal();
+                showNewDiscussionModal(course);
             });
         }
 
         const startFirstDiscussionBtn = document.getElementById('startFirstDiscussionBtn');
         if (startFirstDiscussionBtn) {
             startFirstDiscussionBtn.addEventListener('click', () => {
-                showNewDiscussionModal();
+                showNewDiscussionModal(course);
             });
         }
 
@@ -4955,11 +4955,15 @@ async function loadDiscussions() {
 }
 
 // Show new discussion modal
-function showNewDiscussionModal() {
+function showNewDiscussionModal(courseContext = null) {
     // First get user's courses for course selection
     courseService.getMyCourses()
         .then(response => {
             const courses = response.data.courses;
+            const selectedCourseId = courseContext && courseContext._id ? courseContext._id : null;
+            const selectedCourse = selectedCourseId
+                ? courses.find(course => course._id === selectedCourseId)
+                : null;
 
             // Show modal for creating a new discussion
             const modalHtml = `
@@ -4980,10 +4984,18 @@ function showNewDiscussionModal() {
                             
                             <div>
                                 <label class="block text-gray-700 dark:text-gray-300 mb-2">Course</label>
-                                <select id="discussionCourse" required class="w-full px-4 py-2 text-base border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-gray-800 dark:text-gray-200">
-                                    <option value="">Select a course</option>
-                                    ${courses.map(course => `<option data-user-content="true" value="${course._id}">${course.name} (${course.code})</option>`).join('')}
-                                </select>
+                                ${selectedCourseId ? `
+                                    <input type="hidden" id="discussionCourse" value="${selectedCourseId}">
+                                    <div class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-750 text-gray-700 dark:text-gray-200">
+                                        <p class="font-medium">${selectedCourse ? selectedCourse.name : 'Selected course'}</p>
+                                        <p class="text-sm text-gray-500 dark:text-gray-400">${selectedCourse ? selectedCourse.code : ''}</p>
+                                    </div>
+                                ` : `
+                                    <select id="discussionCourse" required class="w-full px-4 py-2 text-base border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-gray-800 dark:text-gray-200">
+                                        <option value="">Select a course</option>
+                                        ${courses.map(course => `<option data-user-content="true" value="${course._id}">${course.name} (${course.code})</option>`).join('')}
+                                    </select>
+                                `}
                             </div>
                             
                             <div>
@@ -5025,12 +5037,14 @@ function showNewDiscussionModal() {
                 document.body.removeChild(modalContainer);
             });
 
-            // Set current course if we're in a course context
-            if (currentCourse) {
+            // Lock the course to the current course only when launched from a course page
+            if (selectedCourseId) {
                 const courseSelect = document.getElementById('discussionCourse');
-                const option = Array.from(courseSelect.options).find(opt => opt.value === currentCourse._id);
-                if (option) {
-                    option.selected = true;
+                if (courseSelect && courseSelect.tagName === 'SELECT') {
+                    const option = Array.from(courseSelect.options).find(opt => opt.value === selectedCourseId);
+                    if (option) {
+                        option.selected = true;
+                    }
                 }
             }
 

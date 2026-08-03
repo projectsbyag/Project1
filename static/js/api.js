@@ -39,6 +39,10 @@ function setCachedData(endpoint, options, data) {
     requestCache.set(key, { data, timestamp: Date.now() });
 }
 
+function clearRequestCache() {
+    requestCache.clear();
+}
+
 /**
  * PERFORMANCE OPTIMIZATION: Request Debouncing
  * Prevents duplicate requests within 500ms
@@ -102,6 +106,10 @@ const fetchWithAuth = async (endpoint, options = {}) => {
         if (!response.ok) {
             throw new Error(data.message || 'Something went wrong');
         }
+
+        if (options.method && options.method !== 'GET') {
+            clearRequestCache();
+        }
         
         // Cache GET requests
         if (!options.method || options.method === 'GET') {
@@ -143,6 +151,10 @@ const fetchWithoutAuth = async (endpoint, options = {}) => {
                 error.status = response.status;
                 error.data = data;
                 throw error;
+            }
+
+            if (options.method && options.method !== 'GET') {
+                clearRequestCache();
             }
             
             // Cache GET requests
