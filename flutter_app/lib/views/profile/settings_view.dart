@@ -422,7 +422,7 @@ class _SettingsViewState extends State<SettingsView> {
         const Text('DISPLAY LANGUAGE', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 11, color: Colors.grey)),
         const SizedBox(height: 12),
         DropdownButtonFormField<String>(
-          value: _selectedLanguage,
+          initialValue: _selectedLanguage,
           decoration: const InputDecoration(labelText: 'Language'),
           items: const [
             DropdownMenuItem(value: 'en|US', child: Text('English (United States)')),
@@ -469,7 +469,7 @@ class _SettingsViewState extends State<SettingsView> {
         const Text('DATE & TIME FORMAT', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 11, color: Colors.grey)),
         const SizedBox(height: 12),
         DropdownButtonFormField<String>(
-          value: _dateFormat,
+          initialValue: _dateFormat,
           decoration: const InputDecoration(labelText: 'Date Format'),
           items: const [
             DropdownMenuItem(value: 'MM/DD/YYYY', child: Text('MM/DD/YYYY (e.g., 12/31/2023)')),
@@ -480,7 +480,7 @@ class _SettingsViewState extends State<SettingsView> {
         ),
         const SizedBox(height: 16),
         DropdownButtonFormField<String>(
-          value: _timeFormat,
+          initialValue: _timeFormat,
           decoration: const InputDecoration(labelText: 'Time Format'),
           items: const [
             DropdownMenuItem(value: '12h', child: Text('12-hour (e.g., 3:30 PM)')),

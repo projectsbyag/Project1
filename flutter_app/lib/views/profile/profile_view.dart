@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../config/app_theme.dart';
 import '../../providers/auth_provider.dart';
+import '../../providers/data_provider.dart';
 
 class ProfileView extends StatelessWidget {
   const ProfileView({super.key});
@@ -9,8 +10,15 @@ class ProfileView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
+    final dataProvider = Provider.of<DataProvider>(context);
     final user = authProvider.user;
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final isInstructor = user?.role == 'instructor' || user?.role == 'admin';
+
+    final totalCourses = dataProvider.courses.length;
+    final totalAssignments = dataProvider.assignments.length;
+    final totalResources = dataProvider.resources.length;
+    final totalDiscussions = dataProvider.discussions.length;
 
     return SingleChildScrollView(
       padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 24),
@@ -30,7 +38,11 @@ class ProfileView extends StatelessWidget {
                 ),
               ),
               ElevatedButton.icon(
-                onPressed: () {},
+                onPressed: () {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Profile edit mode enabled.')),
+                  );
+                },
                 icon: const Icon(Icons.edit_note_rounded, size: 18),
                 label: const Text('Edit Profile'),
                 style: ElevatedButton.styleFrom(
@@ -67,29 +79,13 @@ class ProfileView extends StatelessWidget {
                           ),
                           child: Column(
                             children: [
-                              Stack(
-                                children: [
-                                  CircleAvatar(
-                                    radius: 38,
-                                    backgroundColor: AppTheme.primaryColor.withValues(alpha: 0.15),
-                                    child: Text(
-                                      user?.firstName.isNotEmpty == true ? user!.firstName[0].toUpperCase() : 'A',
-                                      style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: AppTheme.primaryColor),
-                                    ),
-                                  ),
-                                  Positioned(
-                                    bottom: 0,
-                                    right: 0,
-                                    child: Container(
-                                      padding: const EdgeInsets.all(4),
-                                      decoration: const BoxDecoration(
-                                        color: AppTheme.primaryColor,
-                                        shape: BoxShape.circle,
-                                      ),
-                                      child: const Icon(Icons.camera_alt, color: Colors.white, size: 14),
-                                    ),
-                                  ),
-                                ],
+                              CircleAvatar(
+                                radius: 38,
+                                backgroundColor: AppTheme.primaryColor.withValues(alpha: 0.15),
+                                child: Text(
+                                  user?.firstName.isNotEmpty == true ? user!.firstName[0].toUpperCase() : 'A',
+                                  style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: AppTheme.primaryColor),
+                                ),
                               ),
                               const SizedBox(height: 12),
                               Text(
@@ -98,12 +94,12 @@ class ProfileView extends StatelessWidget {
                               ),
                               const SizedBox(height: 4),
                               Text(
-                                'E-mail: ${user?.email ?? 'a@gmail.com'}',
+                                user?.email ?? 'a@gmail.com',
                                 style: TextStyle(color: Colors.grey.shade500, fontSize: 12),
                               ),
                               const SizedBox(height: 4),
                               Text(
-                                'Bio: ${user?.bio ?? 'No Bio entered yet.'}',
+                                user?.bio ?? 'No Bio entered yet.',
                                 style: TextStyle(color: Colors.grey.shade500, fontSize: 12),
                               ),
                               const SizedBox(height: 10),
@@ -114,7 +110,7 @@ class ProfileView extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                                 child: Text(
-                                  user?.role != null ? (user!.role[0].toUpperCase() + user.role.substring(1)) : 'Instructor',
+                                  user?.role != null ? (user!.role[0].toUpperCase() + user.role.substring(1)) : 'Student',
                                   style: const TextStyle(
                                     color: AppTheme.primaryColor,
                                     fontWeight: FontWeight.bold,
@@ -126,13 +122,11 @@ class ProfileView extends StatelessWidget {
                               Divider(color: isDark ? Colors.grey.shade800 : Colors.grey.shade200, height: 1),
                               const SizedBox(height: 16),
 
-                              _buildInfoRow('Member Since', 'Jul 30, 2026, 06:59 AM (0 days)', isDark),
+                              _buildInfoRow('Account Type', isInstructor ? 'Instructor' : 'Student', isDark),
                               const SizedBox(height: 8),
-                              _buildInfoRow('Last Login', 'Never', isDark),
+                              _buildInfoRow(isInstructor ? 'Teaching Courses' : 'Enrolled Courses', '$totalCourses', isDark),
                               const SizedBox(height: 8),
-                              _buildInfoRow('Total Logins', '0', isDark),
-                              const SizedBox(height: 8),
-                              _buildInfoRow('Teaching Courses', '3', isDark),
+                              _buildInfoRow('Member Status', 'Active', isDark),
                             ],
                           ),
                         ),
@@ -165,12 +159,12 @@ class ProfileView extends StatelessWidget {
                   ),
                   if (isWide) const SizedBox(width: 24) else const SizedBox(height: 24),
 
-                  // Right Column: Teaching Overview, Recent Activity & Courses I Teach
+                  // Right Column: Overview, Activity & Courses
                   Expanded(
                     flex: isWide ? 1 : 0,
                     child: Column(
                       children: [
-                        // Teaching Overview Card
+                        // Overview Card (Instructor: Teaching Overview, Student: Academic Overview)
                         Container(
                           padding: const EdgeInsets.all(20),
                           decoration: BoxDecoration(
@@ -181,21 +175,37 @@ class ProfileView extends StatelessWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text('Teaching Overview', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                              Text(
+                                isInstructor ? 'Teaching Overview' : 'Academic Overview',
+                                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                              ),
                               const SizedBox(height: 16),
                               Row(
-                                children: [
-                                  _buildStatBox('Total Students', '0', isDark),
-                                  const SizedBox(width: 12),
-                                  _buildStatBox('Courses', '3', isDark),
-                                  const SizedBox(width: 12),
-                                  _buildStatBox('Resources', '0', isDark),
-                                  const SizedBox(width: 12),
-                                  _buildStatBox('Assignments', '1', isDark),
-                                ],
+                                children: isInstructor
+                                    ? [
+                                        _buildStatBox('Total Students', '0', isDark),
+                                        const SizedBox(width: 12),
+                                        _buildStatBox('Courses', '$totalCourses', isDark),
+                                        const SizedBox(width: 12),
+                                        _buildStatBox('Resources', '$totalResources', isDark),
+                                        const SizedBox(width: 12),
+                                        _buildStatBox('Assignments', '$totalAssignments', isDark),
+                                      ]
+                                    : [
+                                        _buildStatBox('Enrolled Courses', '$totalCourses', isDark),
+                                        const SizedBox(width: 12),
+                                        _buildStatBox('Assignments', '$totalAssignments', isDark),
+                                        const SizedBox(width: 12),
+                                        _buildStatBox('Discussions', '$totalDiscussions', isDark),
+                                        const SizedBox(width: 12),
+                                        _buildStatBox('Resources', '$totalResources', isDark),
+                                      ],
                               ),
                               const SizedBox(height: 20),
-                              const Text('AVERAGE STUDENT PERFORMANCE', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Colors.grey)),
+                              Text(
+                                isInstructor ? 'AVERAGE STUDENT PERFORMANCE' : 'SUBMISSION PROGRESS',
+                                style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Colors.grey),
+                              ),
                               const SizedBox(height: 8),
                               Row(
                                 children: [
@@ -211,20 +221,12 @@ class ProfileView extends StatelessWidget {
                                   const Text('N/A', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
                                 ],
                               ),
-                              const SizedBox(height: 20),
-                              const Text('STUDENT ENGAGEMENT BY COURSE', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Colors.grey)),
-                              const SizedBox(height: 10),
-                              _buildEngagementRow('Maths 101', '0%', isDark),
-                              const SizedBox(height: 8),
-                              _buildEngagementRow('Intro To Cyber Security', '0%', isDark),
-                              const SizedBox(height: 8),
-                              _buildEngagementRow('Forensic Computing', '0%', isDark),
                             ],
                           ),
                         ),
                         const SizedBox(height: 20),
 
-                        // Recent Activity Card
+                        // Courses Card
                         Container(
                           padding: const EdgeInsets.all(20),
                           decoration: BoxDecoration(
@@ -235,44 +237,20 @@ class ProfileView extends StatelessWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: const [
-                                  Text('Recent Activity', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                                  Text('View All', style: TextStyle(color: AppTheme.primaryColor, fontSize: 12, fontWeight: FontWeight.bold)),
-                                ],
+                              Text(
+                                isInstructor ? 'Courses I Teach' : 'My Enrolled Courses',
+                                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                               ),
                               const SizedBox(height: 16),
-                              Text('No recent activity to display.', style: TextStyle(color: Colors.grey.shade500, fontSize: 13)),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(height: 20),
-
-                        // Courses I Teach Card
-                        Container(
-                          padding: const EdgeInsets.all(20),
-                          decoration: BoxDecoration(
-                            color: isDark ? AppTheme.darkSurface : Colors.white,
-                            borderRadius: BorderRadius.circular(12),
-                            border: Border.all(color: isDark ? const Color(0xFF374151) : const Color(0xFFE5E7EB)),
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: const [
-                                  Text('Courses I Teach', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                                  Text('View All', style: TextStyle(color: AppTheme.primaryColor, fontSize: 12, fontWeight: FontWeight.bold)),
-                                ],
-                              ),
-                              const SizedBox(height: 16),
-                              _buildTeachCourseItem('Maths 101', 'MTH101', AppTheme.emeraldColor, isDark),
-                              const SizedBox(height: 10),
-                              _buildTeachCourseItem('Intro To Cyber Security', 'CYB101', AppTheme.accentColor, isDark),
-                              const SizedBox(height: 10),
-                              _buildTeachCourseItem('Forensic Computing', 'CYB301', AppTheme.amberColor, isDark),
+                              if (dataProvider.courses.isEmpty)
+                                Text('No courses to display.', style: TextStyle(color: Colors.grey.shade500, fontSize: 13))
+                              else
+                                ...dataProvider.courses.map((c) {
+                                  return Padding(
+                                    padding: const EdgeInsets.only(bottom: 10),
+                                    child: _buildTeachCourseItem(c.title, c.code, AppTheme.primaryColor, isDark),
+                                  );
+                                }),
                             ],
                           ),
                         ),
@@ -330,34 +308,12 @@ class ProfileView extends StatelessWidget {
         ),
         child: Column(
           children: [
-            Text(title, style: TextStyle(color: Colors.grey.shade500, fontSize: 10)),
+            Text(title, style: TextStyle(color: Colors.grey.shade500, fontSize: 10), textAlign: TextAlign.center),
             const SizedBox(height: 4),
             Text(value, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildEngagementRow(String title, String percent, bool isDark) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(title, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500)),
-            Text(percent, style: TextStyle(fontSize: 12, color: Colors.grey.shade500)),
-          ],
-        ),
-        const SizedBox(height: 4),
-        LinearProgressIndicator(
-          value: 0.0,
-          backgroundColor: isDark ? const Color(0xFF334155) : Colors.grey.shade200,
-          color: AppTheme.primaryColor,
-          minHeight: 4,
-        ),
-      ],
     );
   }
 

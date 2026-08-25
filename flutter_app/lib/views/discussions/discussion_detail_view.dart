@@ -218,7 +218,7 @@ class _DiscussionDetailViewState extends State<DiscussionDetailView> {
                         ),
                       ],
                     ),
-                  )).toList(),
+                  )),
               ],
             ),
           ),

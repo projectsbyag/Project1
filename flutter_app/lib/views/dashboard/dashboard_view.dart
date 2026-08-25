@@ -7,6 +7,7 @@ import '../../models/course_model.dart';
 import '../../models/discussion_model.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/data_provider.dart';
+import '../../widgets/dialogs.dart';
 import '../assignments/assignment_detail_view.dart';
 import '../courses/course_detail_view.dart';
 import '../discussions/discussion_detail_view.dart';
@@ -21,8 +22,8 @@ class DashboardView extends StatelessWidget {
     final authProvider = Provider.of<AuthProvider>(context);
     final dataProvider = Provider.of<DataProvider>(context);
     final user = authProvider.user;
-
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final isInstructor = user?.role == 'instructor' || user?.role == 'admin';
 
     // Fallback demo items if backend database has no initial items yet
     final displayCourses = dataProvider.courses.isNotEmpty
@@ -101,28 +102,61 @@ class DashboardView extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Dashboard Header
-          Text(
-            'Dashboard',
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-              color: isDark ? AppTheme.textDarkPrimary : AppTheme.textLightPrimary,
-            ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            'Welcome back, ${user?.firstName ?? 'Aliyu'}!',
-            style: TextStyle(
-              color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
-              fontSize: 14,
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Dashboard',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: isDark ? AppTheme.textDarkPrimary : AppTheme.textLightPrimary,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    'Welcome back, ${user?.firstName ?? 'Aliyu'}! (${user?.role != null ? (user!.role[0].toUpperCase() + user.role.substring(1)) : 'Student'})',
+                    style: TextStyle(
+                      color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
+                      fontSize: 14,
+                    ),
+                  ),
+                ],
+              ),
+              isInstructor
+                  ? ElevatedButton.icon(
+                      onPressed: () => Dialogs.showCreateCourseDialog(context),
+                      icon: const Icon(Icons.add, size: 18),
+                      label: const Text('Create Course'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppTheme.primaryColor,
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                      ),
+                    )
+                  : ElevatedButton.icon(
+                      onPressed: () => Dialogs.showEnrollCourseDialog(context),
+                      icon: const Icon(Icons.school, size: 18),
+                      label: const Text('Enroll in Course'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppTheme.primaryColor,
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                      ),
+                    ),
+            ],
           ),
           const SizedBox(height: 16),
           Divider(color: isDark ? Colors.grey.shade800 : Colors.grey.shade300, height: 1),
           const SizedBox(height: 24),
 
           // Section 1: My Courses
-          _buildSectionHeader('My Courses', isDark, () {
+          _buildSectionHeader(isInstructor ? 'My Teaching Courses' : 'My Enrolled Courses', isDark, () {
             if (onNavigate != null) onNavigate!(1);
           }),
           const SizedBox(height: 16),
@@ -404,6 +438,23 @@ class DashboardView extends StatelessWidget {
       ),
       child: Column(
         children: assignments.map((assignment) {
+          final now = DateTime.now();
+          final isPastDue = assignment.dueDate.isBefore(now);
+          final diff = assignment.dueDate.difference(now);
+          final daysLeft = diff.inDays;
+          final hoursLeft = diff.inHours;
+
+          String timeRemainingText;
+          if (isPastDue) {
+            timeRemainingText = 'Past due';
+          } else if (daysLeft == 0) {
+            timeRemainingText = hoursLeft > 0 ? '$hoursLeft hrs left' : 'Due today';
+          } else if (daysLeft == 1) {
+            timeRemainingText = '1 day left';
+          } else {
+            timeRemainingText = '$daysLeft days left';
+          }
+
           final dueDateStr = DateFormat('MMM d').format(assignment.dueDate);
           return InkWell(
             onTap: () {
@@ -428,7 +479,11 @@ class DashboardView extends StatelessWidget {
                   children: [
                     Text(
                       assignment.title,
-                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                        color: isDark ? Colors.white : Colors.black87,
+                      ),
                     ),
                     const SizedBox(height: 6),
                     Row(
@@ -445,7 +500,7 @@ class DashboardView extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(width: 6),
-                        Text('• ${assignment.courseTitle}', style: TextStyle(color: Colors.grey.shade500, fontSize: 12)),
+                        Text('• ${assignment.courseTitle.isNotEmpty ? assignment.courseTitle : "Course"}', style: TextStyle(color: Colors.grey.shade500, fontSize: 12)),
                       ],
                     ),
                   ],
@@ -453,9 +508,23 @@ class DashboardView extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    Text(dueDateStr, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+                    Text(
+                      dueDateStr,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 13,
+                        color: isPastDue ? (isDark ? const Color(0xFFF87171) : const Color(0xFFDC2626)) : (isDark ? Colors.white : Colors.black87),
+                      ),
+                    ),
                     const SizedBox(height: 2),
-                    Text('8 days left', style: TextStyle(color: Colors.grey.shade500, fontSize: 11)),
+                    Text(
+                      timeRemainingText,
+                      style: TextStyle(
+                        color: isPastDue ? (isDark ? const Color(0xFFF87171) : const Color(0xFFDC2626)) : Colors.grey.shade500,
+                        fontSize: 11,
+                        fontWeight: isPastDue ? FontWeight.w500 : FontWeight.normal,
+                      ),
+                    ),
                   ],
                 ),
               ],

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../config/app_theme.dart';
+import '../../providers/auth_provider.dart';
 import '../../providers/data_provider.dart';
 import '../../widgets/dialogs.dart';
 import 'resource_detail_view.dart';
@@ -33,8 +34,11 @@ class _ResourceLibraryViewState extends State<ResourceLibraryView> {
 
   @override
   Widget build(BuildContext context) {
+    final authProvider = Provider.of<AuthProvider>(context);
     final dataProvider = Provider.of<DataProvider>(context);
+    final user = authProvider.user;
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final isInstructor = user?.role == 'instructor' || user?.role == 'admin';
 
     return SingleChildScrollView(
       padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 24),
@@ -53,17 +57,18 @@ class _ResourceLibraryViewState extends State<ResourceLibraryView> {
                   color: isDark ? Colors.white : Colors.black87,
                 ),
               ),
-              ElevatedButton.icon(
-                onPressed: () => Dialogs.showUploadResourceDialog(context),
-                icon: const Icon(Icons.upload, size: 18),
-                label: const Text('Upload Resource'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppTheme.primaryColor,
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+              if (isInstructor)
+                ElevatedButton.icon(
+                  onPressed: () => Dialogs.showUploadResourceDialog(context),
+                  icon: const Icon(Icons.upload, size: 18),
+                  label: const Text('Upload Resource'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppTheme.primaryColor,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                  ),
                 ),
-              ),
             ],
           ),
           const SizedBox(height: 24),

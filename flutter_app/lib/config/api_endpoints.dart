@@ -27,7 +27,17 @@ class ApiEndpoints {
   // Courses
   static String courses = '$baseUrl/courses';
   static String myCourses = '$baseUrl/courses/my-courses';
-  static String enrollCourse(String id) => '$baseUrl/courses/$id/enroll';
+  static String courseDetails(String id) => '$baseUrl/courses/$id';
+  static String updateCourse(String id) => '$baseUrl/courses/$id';
+  static String deleteCourse(String id) => '$baseUrl/courses/$id';
+  static String enrollCourse = '$baseUrl/courses/enroll';
+  static String unenrollCourse(String courseId) => '$baseUrl/courses/$courseId/unenroll';
+  static String courseStudents(String id) => '$baseUrl/courses/$id/students';
+  static String removeCourseStudent(String courseId, String studentId) => '$baseUrl/courses/$courseId/students/$studentId';
+
+  // Course Links
+  static String courseLinks(String courseId) => '$baseUrl/courses/$courseId/links';
+  static String revokeCourseLink(String linkId) => '$baseUrl/links/$linkId/revoke';
 
   // Assignments
   static String assignments = '$baseUrl/assignments';

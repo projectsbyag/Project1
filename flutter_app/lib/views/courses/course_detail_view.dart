@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
+import '../../config/api_endpoints.dart';
 import '../../config/app_theme.dart';
 import '../../models/course_model.dart';
 import '../../models/assignment_model.dart';
@@ -9,10 +10,12 @@ import '../../models/discussion_model.dart';
 import '../../models/resource_model.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/data_provider.dart';
+import '../../services/api_service.dart';
 import '../../widgets/dialogs.dart';
 import '../assignments/assignment_detail_view.dart';
 import '../discussions/discussion_detail_view.dart';
 import '../resources/resource_detail_view.dart';
+import 'course_settings_dialog.dart';
 
 class CourseDetailView extends StatefulWidget {
   final CourseModel course;
@@ -24,6 +27,29 @@ class CourseDetailView extends StatefulWidget {
 }
 
 class _CourseDetailViewState extends State<CourseDetailView> {
+  late CourseModel _course;
+
+  @override
+  void initState() {
+    super.initState();
+    _course = widget.course;
+  }
+
+  void _openSettingsModal() {
+    CourseSettingsDialog.showSettingsModal(
+      context,
+      course: _course,
+      onCourseUpdated: (updated) {
+        setState(() {
+          _course = updated;
+        });
+      },
+      onCourseDeleted: () {
+        Navigator.of(context).pop();
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
@@ -31,15 +57,15 @@ class _CourseDetailViewState extends State<CourseDetailView> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final user = authProvider.user;
 
-    final assignments = dataProvider.assignments.where((a) => a.courseId == widget.course.id).toList();
-    final announcements = dataProvider.announcements.where((a) => a.courseId == widget.course.id).toList();
-    final discussions = dataProvider.discussions.where((d) => d.courseId == widget.course.id).toList();
-    final resources = dataProvider.resources.where((r) => r.courseId == widget.course.id).toList();
+    final assignments = dataProvider.assignments.where((a) => a.courseId == _course.id).toList();
+    final announcements = dataProvider.announcements.where((a) => a.courseId == _course.id).toList();
+    final discussions = dataProvider.discussions.where((d) => d.courseId == _course.id).toList();
+    final resources = dataProvider.resources.where((r) => r.courseId == _course.id).toList();
 
     return Scaffold(
       backgroundColor: isDark ? AppTheme.darkBackground : const Color(0xFFF3F4F6),
       appBar: AppBar(
-        title: Text(widget.course.title),
+        title: Text(_course.title),
         backgroundColor: isDark ? AppTheme.darkSurface : Colors.white,
         foregroundColor: isDark ? Colors.white : Colors.black87,
         elevation: 1,
@@ -51,7 +77,7 @@ class _CourseDetailViewState extends State<CourseDetailView> {
           children: [
             _buildCourseHeader(isDark, user),
             const SizedBox(height: 24),
-            _buildAnnouncements(announcements, isDark),
+            _buildAnnouncements(announcements, isDark, user),
             const SizedBox(height: 24),
             LayoutBuilder(
               builder: (context, constraints) {
@@ -74,7 +100,7 @@ class _CourseDetailViewState extends State<CourseDetailView> {
                         flex: 1,
                         child: Column(
                           children: [
-                            _buildResources(resources, isDark),
+                            _buildResources(resources, isDark, user),
                             const SizedBox(height: 24),
                             _buildCourseInfo(isDark, user),
                           ],
@@ -89,7 +115,7 @@ class _CourseDetailViewState extends State<CourseDetailView> {
                       const SizedBox(height: 24),
                       _buildDiscussions(discussions, isDark),
                       const SizedBox(height: 24),
-                      _buildResources(resources, isDark),
+                      _buildResources(resources, isDark, user),
                       const SizedBox(height: 24),
                       _buildCourseInfo(isDark, user),
                     ],
@@ -104,6 +130,8 @@ class _CourseDetailViewState extends State<CourseDetailView> {
   }
 
   Widget _buildCourseHeader(bool isDark, dynamic user) {
+    final bannerColor = CourseSettingsDialog.parseHexColor(_course.color);
+
     return Container(
       decoration: BoxDecoration(
         color: isDark ? AppTheme.darkSurface : Colors.white,
@@ -123,9 +151,12 @@ class _CourseDetailViewState extends State<CourseDetailView> {
           Container(
             height: 160,
             width: double.infinity,
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: [Color(0xFF5D5CDE), Color(0xFF8B5CF6)],
+                colors: [
+                  bannerColor,
+                  bannerColor.withValues(alpha: 0.8),
+                ],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
@@ -135,7 +166,7 @@ class _CourseDetailViewState extends State<CourseDetailView> {
                 ? Padding(
                     padding: const EdgeInsets.all(12),
                     child: TextButton.icon(
-                      onPressed: () {},
+                      onPressed: _openSettingsModal,
                       icon: const Icon(Icons.settings, color: Colors.white, size: 16),
                       label: const Text('Course Settings', style: TextStyle(color: Colors.white)),
                       style: TextButton.styleFrom(
@@ -151,7 +182,7 @@ class _CourseDetailViewState extends State<CourseDetailView> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  widget.course.title,
+                  _course.title,
                   style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 12),
@@ -162,12 +193,12 @@ class _CourseDetailViewState extends State<CourseDetailView> {
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF5D5CDE).withValues(alpha: 0.15),
+                        color: bannerColor.withValues(alpha: 0.15),
                         borderRadius: BorderRadius.circular(6),
                       ),
                       child: Text(
-                        widget.course.code,
-                        style: const TextStyle(color: Color(0xFF5D5CDE), fontWeight: FontWeight.bold, fontSize: 13),
+                        _course.code,
+                        style: TextStyle(color: bannerColor, fontWeight: FontWeight.bold, fontSize: 13),
                       ),
                     ),
                     _buildDot(isDark),
@@ -176,7 +207,7 @@ class _CourseDetailViewState extends State<CourseDetailView> {
                       children: [
                         Icon(Icons.person, size: 16, color: Colors.grey.shade500),
                         const SizedBox(width: 4),
-                        Text(widget.course.instructorName ?? 'Instructor', style: TextStyle(color: isDark ? Colors.grey.shade300 : Colors.grey.shade700)),
+                        Text(_course.instructorName ?? 'Instructor', style: TextStyle(color: isDark ? Colors.grey.shade300 : Colors.grey.shade700)),
                       ],
                     ),
                     _buildDot(isDark),
@@ -185,14 +216,25 @@ class _CourseDetailViewState extends State<CourseDetailView> {
                       children: [
                         Icon(Icons.people, size: 16, color: Colors.grey.shade500),
                         const SizedBox(width: 4),
-                        Text('${widget.course.enrolledCount} students', style: TextStyle(color: isDark ? Colors.grey.shade300 : Colors.grey.shade700)),
+                        Text('${_course.enrolledCount} students', style: TextStyle(color: isDark ? Colors.grey.shade300 : Colors.grey.shade700)),
                       ],
                     ),
+                    if (_course.isArchived) ...[
+                      _buildDot(isDark),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                        decoration: BoxDecoration(
+                          color: Colors.amber.withValues(alpha: 0.2),
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        child: const Text('Archived', style: TextStyle(color: Colors.amber, fontWeight: FontWeight.bold, fontSize: 12)),
+                      ),
+                    ],
                   ],
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  widget.course.description.isNotEmpty ? widget.course.description : 'No course description provided.',
+                  _course.description.isNotEmpty ? _course.description : 'No course description provided.',
                   style: TextStyle(color: isDark ? Colors.grey.shade400 : Colors.grey.shade600, height: 1.5),
                 ),
                 if (user?.role == 'student') ...[
@@ -212,7 +254,7 @@ class _CourseDetailViewState extends State<CourseDetailView> {
                       ),
                       const SizedBox(width: 12),
                       OutlinedButton.icon(
-                        onPressed: () {},
+                        onPressed: _unenroll,
                         icon: const Icon(Icons.logout, size: 18),
                         label: const Text('Unenroll'),
                         style: OutlinedButton.styleFrom(
@@ -233,19 +275,62 @@ class _CourseDetailViewState extends State<CourseDetailView> {
     );
   }
 
+  Future<void> _unenroll() async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Unenroll from Course'),
+        content: Text('Are you sure you want to unenroll from ${_course.title}?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(false),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () => Navigator.of(ctx).pop(true),
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.red, foregroundColor: Colors.white),
+            child: const Text('Unenroll'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed == true) {
+      try {
+        await ApiService.delete(ApiEndpoints.unenrollCourse(_course.id));
+        if (mounted) {
+          Provider.of<DataProvider>(context, listen: false).fetchCourses();
+          Navigator.of(context).pop();
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Successfully unenrolled from course.')),
+          );
+        }
+      } catch (e) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Failed to unenroll: $e')),
+          );
+        }
+      }
+    }
+  }
+
   Widget _buildDot(bool isDark) {
     return Text('•', style: TextStyle(color: isDark ? Colors.grey.shade600 : Colors.grey.shade400, fontSize: 18));
   }
 
-  Widget _buildAnnouncements(List<AnnouncementModel> announcements, bool isDark) {
+  Widget _buildAnnouncements(List<AnnouncementModel> announcements, bool isDark, dynamic user) {
+    final isInstructor = user?.role == 'instructor' || user?.role == 'admin';
     return _buildSectionCard(
       title: 'Announcements',
       isDark: isDark,
-      headerAction: TextButton.icon(
-        onPressed: () => Dialogs.showCreateAnnouncementDialog(context),
-        icon: const Icon(Icons.add, size: 16),
-        label: const Text('New Announcement'),
-      ),
+      headerAction: isInstructor
+          ? TextButton.icon(
+              onPressed: () => Dialogs.showCreateAnnouncementDialog(context),
+              icon: const Icon(Icons.add, size: 16),
+              label: const Text('New Announcement'),
+            )
+          : null,
       content: announcements.isEmpty
           ? Text('No announcements yet.', style: TextStyle(color: isDark ? Colors.grey.shade400 : Colors.grey.shade500))
           : Column(
@@ -317,6 +402,25 @@ class _CourseDetailViewState extends State<CourseDetailView> {
             )
           : Column(
               children: assignments.map((a) {
+                final now = DateTime.now();
+                final isPastDue = a.dueDate.isBefore(now);
+                final diff = a.dueDate.difference(now);
+                final daysLeft = diff.inDays;
+
+                String statusText = 'Upcoming';
+                Color badgeBg = isDark ? const Color(0xFF1E1B4B).withValues(alpha: 0.4) : const Color(0xFFEEF2FF);
+                Color badgeText = isDark ? const Color(0xFFA5B4FC) : AppTheme.primaryColor;
+
+                if (isPastDue) {
+                  statusText = 'Past Due';
+                  badgeBg = isDark ? const Color(0xFF7F1D1D).withValues(alpha: 0.3) : const Color(0xFFFEE2E2);
+                  badgeText = isDark ? const Color(0xFFFCA5A5) : const Color(0xFFDC2626);
+                } else if (daysLeft <= 1) {
+                  statusText = 'Due Soon';
+                  badgeBg = isDark ? const Color(0xFF7C2D12).withValues(alpha: 0.3) : const Color(0xFFFFEDD5);
+                  badgeText = isDark ? const Color(0xFFFDBA74) : const Color(0xFFEA580C);
+                }
+
                 return Container(
                   margin: const EdgeInsets.only(bottom: 12),
                   padding: const EdgeInsets.all(16),
@@ -331,9 +435,32 @@ class _CourseDetailViewState extends State<CourseDetailView> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(a.title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                            Row(
+                              children: [
+                                Text(a.title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                                const SizedBox(width: 8),
+                                Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                                  decoration: BoxDecoration(
+                                    color: badgeBg,
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: Text(
+                                    statusText,
+                                    style: TextStyle(color: badgeText, fontSize: 10, fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                              ],
+                            ),
                             const SizedBox(height: 4),
-                            Text('Due: ${DateFormat.yMMMd().format(a.dueDate)}', style: TextStyle(color: isDark ? Colors.grey.shade400 : Colors.grey.shade600, fontSize: 13)),
+                            Text(
+                              'Due: ${DateFormat.yMMMd().format(a.dueDate)} ${!isPastDue ? "(${daysLeft == 0 ? 'Due today' : '$daysLeft days left'})" : "(Past due)"}',
+                              style: TextStyle(
+                                color: isPastDue ? (isDark ? const Color(0xFFF87171) : const Color(0xFFDC2626)) : (isDark ? Colors.grey.shade400 : Colors.grey.shade600),
+                                fontSize: 13,
+                              ),
+                            ),
+                            const SizedBox(height: 2),
                             Text('${a.maxPoints} points', style: TextStyle(color: isDark ? Colors.grey.shade300 : Colors.grey.shade700, fontSize: 13)),
                           ],
                         ),
@@ -405,15 +532,18 @@ class _CourseDetailViewState extends State<CourseDetailView> {
     );
   }
 
-  Widget _buildResources(List<ResourceModel> resources, bool isDark) {
+  Widget _buildResources(List<ResourceModel> resources, bool isDark, dynamic user) {
+    final isInstructor = user?.role == 'instructor' || user?.role == 'admin';
     return _buildSectionCard(
       title: 'Resources',
       isDark: isDark,
-      headerAction: TextButton.icon(
-        onPressed: () => Dialogs.showUploadResourceDialog(context),
-        icon: const Icon(Icons.add, size: 16),
-        label: const Text('Upload Resource'),
-      ),
+      headerAction: isInstructor
+          ? TextButton.icon(
+              onPressed: () => Dialogs.showUploadResourceDialog(context),
+              icon: const Icon(Icons.add, size: 16),
+              label: const Text('Upload Resource'),
+            )
+          : null,
       content: resources.isEmpty
           ? Text('No resources have been added to this course yet.', style: TextStyle(color: isDark ? Colors.grey.shade400 : Colors.grey.shade500))
           : Column(
@@ -445,17 +575,17 @@ class _CourseDetailViewState extends State<CourseDetailView> {
       content: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildInfoRow('Instructor', widget.course.instructorName ?? 'Instructor', isDark),
+          _buildInfoRow('Instructor', _course.instructorName ?? 'Instructor', isDark),
           const SizedBox(height: 16),
-          _buildInfoRow('Course Code', widget.course.code, isDark),
+          _buildInfoRow('Course Code', _course.code, isDark),
           const SizedBox(height: 16),
-          _buildInfoRow('Students Enrolled', '${widget.course.enrolledCount} students', isDark),
+          _buildInfoRow('Students Enrolled', '${_course.enrolledCount} students', isDark),
           if (user?.role == 'instructor') ...[
             const SizedBox(height: 24),
             SizedBox(
               width: double.infinity,
               child: ElevatedButton.icon(
-                onPressed: () {},
+                onPressed: _openSettingsModal,
                 icon: const Icon(Icons.settings),
                 label: const Text('Course Settings'),
                 style: ElevatedButton.styleFrom(
@@ -505,7 +635,7 @@ class _CourseDetailViewState extends State<CourseDetailView> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(title, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-              if (headerAction != null) headerAction,
+              ?headerAction,
             ],
           ),
           const SizedBox(height: 20),

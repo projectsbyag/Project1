@@ -129,9 +129,12 @@ class DataProvider extends ChangeNotifier {
     }
   }
 
-  Future<bool> enrollCourse(String courseId) async {
+  Future<bool> enrollCourse(String courseId, [String enrollmentCode = '']) async {
     try {
-      await ApiService.post(ApiEndpoints.enrollCourse(courseId), {});
+      await ApiService.post(ApiEndpoints.enrollCourse, {
+        'courseId': courseId,
+        'enrollmentCode': enrollmentCode,
+      });
       await fetchCourses();
       return true;
     } catch (_) {
