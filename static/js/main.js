@@ -326,13 +326,15 @@ function updateUserInfo(userData = window.currentUser) {
     if (sidebarName) sidebarName.textContent = `${userData.firstName} ${userData.lastName}`;
     if (sidebarRole) sidebarRole.textContent = capitalizeFirstLetter(userData.role);
     
+    const defaultAvatar = window.DEFAULT_PROFILE_IMAGE || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=256&q=80';
+
     // Add error handler BEFORE setting src
     if (sidebarImage) {
         sidebarImage.onerror = function() {
             this.onerror = null;
-            this.src = '/uploads/profile/default.jpg';
+            this.src = defaultAvatar;
         };
-        sidebarImage.src = `${newAvatarUrl}?t=${new Date().getTime()}`;
+        sidebarImage.src = newAvatarUrl;
     }
 
     // Update mobile header image
@@ -340,9 +342,9 @@ function updateUserInfo(userData = window.currentUser) {
     if (mobileImage) {
         mobileImage.onerror = function() {
             this.onerror = null;
-            this.src = '/uploads/profile/default.jpg';
+            this.src = defaultAvatar;
         };
-        mobileImage.src = `${newAvatarUrl}?t=${new Date().getTime()}`;
+        mobileImage.src = newAvatarUrl;
     }
 }
 
@@ -1055,7 +1057,7 @@ function generateInstructorModal(assignment, submissions, submissionStats, isPas
                                             <tr>
                                                 <td class="px-4 py-2">
                                                     <div class="flex items-center">
-                                                        <img src="${getProfileImageUrl(student)}" alt="${studentName}" class="w-7 h-7 rounded-full mr-2">
+                                                        <img src="${getProfileImageUrl(student)}" alt="${studentName}" class="w-7 h-7 rounded-full object-cover mr-2" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=256&q=80';">
                                                         <span>${studentName}</span>
                                                     </div>
                                                 </td>

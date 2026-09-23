@@ -116,30 +116,65 @@ function generateCalendarDays(events = []) {
     return calendarHTML;
 }
 
-// Get profile image URL
-// Get profile image URL
+// Default profile picture URL (clean, high-resolution, universal avatar)
+const DEFAULT_PROFILE_IMAGE = 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=256&q=80';
+window.DEFAULT_PROFILE_IMAGE = DEFAULT_PROFILE_IMAGE;
+
 // Get profile image URL
 function getProfileImageUrl(user) {
-    // Get API base URL from environment or default
     const API_BASE_URL = window.API_BASE_URL || 'https://project1-1bz0.onrender.com';
     
     // Return default if no user
-    if (!user) return `${API_BASE_URL}/uploads/profile/default.jpg`;
+    if (!user) return DEFAULT_PROFILE_IMAGE;
+
+    // If string passed directly (e.g. image path or ID)
+    if (typeof user === 'string') {
+        if (user.startsWith('http://') || user.startsWith('https://')) return user;
+        if (user.startsWith('/uploads/')) return `${API_BASE_URL}${user}`;
+        if (user.includes('.') && user !== 'default.jpg' && user !== 'default.png') {
+            return `${API_BASE_URL}/uploads/profile/${user}`;
+        }
+        return DEFAULT_PROFILE_IMAGE;
+    }
     
     // Check if user has a custom profile picture
-    if (user.profilePicture && user.profilePicture !== 'default.jpg') {
+    if (user.profilePicture && user.profilePicture !== 'default.jpg' && user.profilePicture !== 'default.png') {
         // If it's a full URL (external image), use it directly
-        if (user.profilePicture.startsWith('http')) {
+        if (user.profilePicture.startsWith('http://') || user.profilePicture.startsWith('https://')) {
             return user.profilePicture;
+        }
+        
+        if (user.profilePicture.startsWith('/uploads/')) {
+            return `${API_BASE_URL}${user.profilePicture}`;
         }
         
         // For uploaded files, use the backend server URL
         return `${API_BASE_URL}/uploads/profile/${user.profilePicture}`;
     }
     
-    // Return default profile image from backend
-    return `${API_BASE_URL}/uploads/profile/default.jpg`;
+    // Return default profile image
+    return DEFAULT_PROFILE_IMAGE;
 }
+
+// Global fallback handler for avatar/profile images that fail to load
+window.addEventListener('error', function(e) {
+    if (e.target && e.target.tagName === 'IMG') {
+        const img = e.target;
+        if (img.dataset.fallbackApplied) return;
+        
+        const isProfileImg = img.classList.contains('rounded-full') ||
+            (img.id && (img.id.toLowerCase().includes('profile') || img.id.toLowerCase().includes('avatar'))) ||
+            (img.alt && (img.alt.toLowerCase().includes('profile') || img.alt.toLowerCase().includes('instructor') || img.alt.toLowerCase().includes('student') || img.alt.toLowerCase().includes('user'))) ||
+            img.src.includes('uploads/profile') ||
+            img.src.includes('default.jpg') ||
+            img.src.includes('picsum.photos');
+
+        if (isProfileImg && img.src !== DEFAULT_PROFILE_IMAGE) {
+            img.dataset.fallbackApplied = 'true';
+            img.src = DEFAULT_PROFILE_IMAGE;
+        }
+    }
+}, true);
 
 // Capitalize first letter
 function capitalizeFirstLetter(string) {

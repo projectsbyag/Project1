@@ -129,10 +129,11 @@ userSchema.virtual('fullName').get(function() {
 
 // Virtual property for profile picture URL
 userSchema.virtual('profilePictureUrl').get(function() {
-  if (this.profilePicture && this.profilePicture !== 'default.jpg') {
+  if (this.profilePicture && this.profilePicture !== 'default.jpg' && this.profilePicture !== 'default.png') {
+    if (this.profilePicture.startsWith('http')) return this.profilePicture;
     return `/uploads/profile/${this.profilePicture}`;
   }
-  return '/uploads/profile/default.jpg';
+  return 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=256&q=80';
 });
 // Encrypt password before saving
 userSchema.pre('save', async function(next) {

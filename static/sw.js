@@ -1,5 +1,5 @@
 // Service Worker for offline support and caching
-const CACHE_NAME = 'virtual-campus-v1';
+const CACHE_NAME = 'virtual-campus-v2';
 const STATIC_ASSETS = [
     '/',
     '/index.html',

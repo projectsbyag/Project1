@@ -543,8 +543,8 @@ async function loadDashboard() {
         <div class="p-3 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-750 transition cursor-pointer bg-blue-50 dark:bg-blue-900/10 border-blue-200 dark:border-blue-900/30"
             onclick="loadView('course-detail', {courseId: '${course._id}'})">
             <div class="flex items-center mb-1">
-                <img src="${getProfileImageUrl(announcement.author)}" alt="Instructor" class="w-10 h-10 rounded-full mr-3"
-                onerror="this.onerror=null; this.src='/uploads/profile/default.jpg';">
+                <img src="${getProfileImageUrl(announcement.author)}" alt="Instructor" class="w-10 h-10 rounded-full object-cover mr-3"
+                onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=256&q=80';">
                 <div>
                     <p class="text-gray-500 dark:text-gray-400 font-normal text-sm">
                         ${announcement.author.firstName} ${announcement.author.lastName} • ${formatTimeAgo(announcement.createdAt)}
@@ -690,7 +690,7 @@ async function loadCourses() {
                                         </span>
                                     </div>
                                     <div class="flex items-center">
-                                        <img src="${getProfileImageUrl(course.instructor)}" alt="${course.instructor.firstName}" class="w-6 h-6 rounded-full mr-2">
+                                        <img src="${getProfileImageUrl(course.instructor)}" alt="${course.instructor.firstName}" class="w-6 h-6 rounded-full object-cover mr-2" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=256&q=80';">
                                         <span class="text-sm text-gray-600 dark:text-gray-300">
                                             ${course.instructor.firstName} ${course.instructor.lastName}
                                         </span>
@@ -735,7 +735,7 @@ async function loadCourses() {
                                         </span>
                                     </div>
                                     <div class="flex items-center mb-4">
-                                        <img src="${getProfileImageUrl(course.instructor)}" alt="${course.instructor.firstName}" class="w-6 h-6 rounded-full mr-2">
+                                        <img src="${getProfileImageUrl(course.instructor)}" alt="${course.instructor.firstName}" class="w-6 h-6 rounded-full object-cover mr-2" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=256&q=80';">
                                         <span class="text-sm text-gray-600 dark:text-gray-300">
                                             ${course.instructor.firstName} ${course.instructor.lastName}
                                         </span>
@@ -1062,7 +1062,7 @@ function showCoursePreviewModal(course) {
                     </div>
                     
                     <div class="flex items-center mb-4 pb-4 border-b border-gray-200 dark:border-gray-700">
-                        <img src="${getProfileImageUrl(course.instructor)}" alt="${course.instructor.firstName}" class="w-10 h-10 rounded-full mr-3">
+                        <img src="${getProfileImageUrl(course.instructor)}" alt="${course.instructor.firstName}" class="w-10 h-10 rounded-full object-cover mr-3" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=256&q=80';">
                         <div>
                             <p class="font-medium">${course.instructor.firstName} ${course.instructor.lastName}</p>
                             <p class="text-sm text-gray-500 dark:text-gray-400">Instructor</p>
@@ -1289,8 +1289,8 @@ async function loadCourseDetail(courseId) {
                 ${courseAnnouncements.map(announcement => `
                   <div class="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-100 dark:border-blue-800">
                     <div class="flex">
-                      <img src="${getProfileImageUrl(announcement.author)}" alt="Instructor" class="w-10 h-10 rounded-full mr-3"
-                      onerror="this.onerror=null; this.src='/uploads/profiles/default.jpg';">
+                      <img src="${getProfileImageUrl(announcement.author)}" alt="Instructor" class="w-10 h-10 rounded-full object-cover mr-3"
+                      onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=256&q=80';">
                       <div>
                         <p class="font-medium">${announcement.author.firstName} ${announcement.author.lastName} <span class="text-gray-500 dark:text-gray-400 font-normal text-sm">• ${formatTimeAgo(announcement.createdAt)}</span></p>
                         <p class="text-sm font-semibold text-black-500 dark:text-black-400">${announcement.title}</p>
@@ -1434,7 +1434,7 @@ async function loadCourseDetail(courseId) {
                                         </div>
                                         <p class="text-sm text-gray-600 dark:text-gray-300 mt-1 line-clamp-1" data-user-content="true">${discussion.content}</p>
                                         <div class="flex items-center mt-2 text-xs text-gray-500 dark:text-gray-400">
-                                            <img src="${getProfileImageUrl(discussion.author)}" alt="${discussion.author.firstName}" class="w-5 h-5 rounded-full mr-2">
+                                            <img src="${getProfileImageUrl(discussion.author)}" alt="${discussion.author.firstName}" class="w-5 h-5 rounded-full object-cover mr-2" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=256&q=80';">
                                             ${discussion.author.firstName} ${discussion.author.lastName}
                                             <span class="mx-2">•</span>
                                             <i class="far fa-comment-alt mr-1"></i> ${discussion.replyCount || discussion.replies?.length || 0} replies
@@ -1514,8 +1514,8 @@ async function loadCourseDetail(courseId) {
                             <div>
                                 <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Instructor</h3>
                                 <div class="flex items-center mt-1">
-                                    <img src="${getProfileImageUrl(course.instructor)}" alt="${course.instructor.firstName}" class="w-8 h-8 rounded-full mr-3"
-                                    onerror="this.onerror=null; this.src='/uploads/profiles/default.jpg';">
+                                    <img src="${getProfileImageUrl(course.instructor)}" alt="${course.instructor.firstName}" class="w-8 h-8 rounded-full object-cover mr-3"
+                                    onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=256&q=80';">
                                     <div>
                                         <p class="font-medium">${course.instructor.firstName} ${course.instructor.lastName}</p>
                                         <p class="text-xs text-gray-500 dark:text-gray-400">${course.instructor.email}</p>
@@ -2370,7 +2370,7 @@ function displayStudentManagementModal(course, students) {
                                     <tr class="student-row" data-id="${student._id}">
                                         <td class="px-4 py-3">
                                             <div class="flex items-center">
-                                                <img src="${getProfileImageUrl(student)}" alt="${student.firstName}" class="w-8 h-8 rounded-full mr-3">
+                                                <img src="${getProfileImageUrl(student)}" alt="${student.firstName}" class="w-8 h-8 rounded-full object-cover mr-3" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=256&q=80';">
                                                 <div>
                                                     <p class="font-medium">${student.firstName} ${student.lastName}</p>
                                                 </div>
@@ -3060,7 +3060,7 @@ async function loadDiscussionDetail(discussionId) {
                 </div>
                 <h1 class="text-2xl font-bold" data-user-content="true">${discussion.title}</h1>
                 <div class="flex items-center mt-2 mb-4">
-                    <img src="${getProfileImageUrl(discussion.author)}" alt="${discussion.author.firstName}" class="w-8 h-8 rounded-full mr-2">
+                    <img src="${getProfileImageUrl(discussion.author)}" alt="${discussion.author.firstName}" class="w-8 h-8 rounded-full object-cover mr-2" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=256&q=80';">
                     <div>
                         <p class="text-sm font-medium">${discussion.author.firstName} ${discussion.author.lastName}</p>
                         <p class="text-xs text-gray-500 dark:text-gray-400">${formatTimeAgo(discussion.createdAt)}</p>
@@ -3122,7 +3122,7 @@ async function loadDiscussionDetail(discussionId) {
                 ${discussion.replies && discussion.replies.length > 0 ? discussion.replies.map(reply => `
                     <div class="border-t border-gray-200 dark:border-gray-700 pt-4">
                         <div class="flex">
-                            <img src="${getProfileImageUrl(reply.author)}" alt="${reply.author.firstName}" class="w-10 h-10 rounded-full mr-3">
+                            <img src="${getProfileImageUrl(reply.author)}" alt="${reply.author.firstName}" class="w-10 h-10 rounded-full object-cover mr-3" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=256&q=80';">
                             <div class="flex-1">
                                 <div class="flex items-center">
                                     <p class="font-medium" data-user-content="true">${reply.author.firstName} ${reply.author.lastName}</p>
@@ -4188,7 +4188,7 @@ async function loadResourceDetail(resourceId, activeTab = 'info') {
                                         <div class="comment-item p-4 border border-gray-200 dark:border-gray-700 rounded-lg mb-4" data-id="${comment._id}">
                                             <div class="flex justify-between items-start mb-2">
                                                 <div class="flex items-center">
-                                                    <img src="${getProfileImageUrl(comment.user?._id || comment.user)}" alt="${comment.user?.firstName || 'User'}" class="w-8 h-8 rounded-full mr-3">
+                                                    <img src="${getProfileImageUrl(comment.user)}" alt="${comment.user?.firstName || 'User'}" class="w-8 h-8 rounded-full object-cover mr-3" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=256&q=80';">
                                                     <div>
                                                         <p class="font-medium">${comment.user?.firstName || ''} ${comment.user?.lastName || ''}</p>
                                                         <p class="text-xs text-gray-500 dark:text-gray-400">${formatTimeAgo(comment.createdAt)}</p>
@@ -4284,8 +4284,8 @@ async function loadResourceDetail(resourceId, activeTab = 'info') {
                                 <p class="text-sm text-gray-500 dark:text-gray-400 mb-3">${courseCode}</p>
                                 
                                 <div class="flex items-center mb-4">
-                                    <img src="${getProfileImageUrl(course.instructor)}" alt="${course.instructor?.firstName || 'Instructor'}" class="w-6 h-6 rounded-full mr-2"
-                                    onerror="this.onerror=null; this.src='/uploads/profiles/default.jpg';">
+                                    <img src="${getProfileImageUrl(course.instructor)}" alt="${course.instructor?.firstName || 'Instructor'}" class="w-6 h-6 rounded-full object-cover mr-2"
+                                    onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=256&q=80';">
                                     <span class="text-sm">${course.instructor?.firstName || ''} ${course.instructor?.lastName || ''}</span>
                                 </div>
                                 
@@ -5819,7 +5819,7 @@ function viewSubmissions(assignmentId) {
                                                             <tr class="submission-row ${isGraded ? 'graded' : 'ungraded'}" data-submission-id="${submission._id}">
                                                                 <td class="px-4 py-4">
                                                                     <div class="flex items-center">
-                                                                        <img src="${getProfileImageUrl(student)}" alt="${studentName}" class="w-8 h-8 rounded-full mr-3">
+                                                                        <img src="${getProfileImageUrl(student)}" alt="${studentName}" class="w-8 h-8 rounded-full object-cover mr-3" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=256&q=80';">
                                                                         <div>
                                                                             <p class="font-medium">${studentName}</p>
                                                                             <p class="text-xs text-gray-500 dark:text-gray-400">${studentEmail}</p>
@@ -5954,7 +5954,7 @@ function showSubmissionDetailModal(submission, assignment) {
                         <div class="text-right">
                             <p class="flex items-center">
                                 <span class="font-medium mr-2">Student:</span>
-                                <img src="${getProfileImageUrl(student)}" alt="${studentName}" class="w-6 h-6 rounded-full mr-2">
+                                <img src="${getProfileImageUrl(student)}" alt="${studentName}" class="w-6 h-6 rounded-full object-cover mr-2" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=256&q=80';">
                                 ${studentName}
                             </p>
                             <p><span class="font-medium">Submitted:</span> ${formatDate(submission.submittedAt)} ${isLate ? '<span class="text-red-500">(Late)</span>' : ''}</p>
@@ -6203,7 +6203,7 @@ async function loadProfile(isRefresh = false) {
                     <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-6">
                         <div class="flex flex-col items-center text-center mb-4">
                             <div class="relative">
-                                <img src="${getProfileImageUrl(userData)}" alt="${userData.firstName}" class="w-24 h-24 rounded-full mb-3">
+                                <img id="profilePageImage" src="${getProfileImageUrl(userData)}" alt="${userData.firstName}" class="w-24 h-24 rounded-full object-cover mb-3 shadow" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=256&q=80';">
                                 <button id="changeAvatarBtn" class="absolute bottom-0 right-0 bg-primary hover:bg-primaryDark text-white rounded-full w-8 h-8 flex items-center justify-center">
                                     <i class="fas fa-camera"></i>
                                 </button>
@@ -6938,7 +6938,7 @@ function showChangeAvatarModal() {
                     <div class="text-center">
                         <div class="mx-auto w-32 h-32 mb-3 relative">
                             <img id="avatarPreview" src="${getProfileImageUrl(window.currentUser)}" alt="Profile" 
-                                class="w-full h-full rounded-full object-cover border-2 border-gray-200 dark:border-gray-700">
+                                class="w-full h-full rounded-full object-cover border-2 border-gray-200 dark:border-gray-700" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=256&q=80';">
                             <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center rounded-full opacity-0 hover:opacity-100 transition cursor-pointer">
                                 <span class="text-white text-sm">Change Picture</span>
                             </div>
@@ -7308,7 +7308,7 @@ async function loadSettings() {
                                 <p class="text-gray-600 dark:text-gray-400 mb-3">Upload a profile picture to personalize your account.</p>
                                 
                                 <div class="flex items-center mb-4">
-                                    <img src="${getProfileImageUrl(userData)}" alt="${userData.firstName}" class="w-20 h-20 rounded-full mr-4">
+                                    <img src="${getProfileImageUrl(userData)}" alt="${userData.firstName}" class="w-20 h-20 rounded-full object-cover mr-4" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=256&q=80';">
                                     <div>
                                         <button id="changeAvatarBtn" class="px-4 py-2 bg-primary hover:bg-primaryDark text-white rounded-lg transition mb-2">
                                             Change Picture
