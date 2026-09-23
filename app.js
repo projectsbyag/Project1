@@ -37,8 +37,8 @@ app.use(compression({
     }
 }));
 
-// ✅ Improved CORS configuration
-app.use(cors({ origin: "*", credentials: true }));
+// ✅ Improved CORS configuration with preflight caching
+app.use(cors({ origin: "*", credentials: true, maxAge: 86400 }));
 
 // ✅ Security headers
 app.use(helmet());
@@ -49,7 +49,7 @@ app.use(
             scriptSrc: ["'self'", "https://cdn.tailwindcss.com", "https://cdn.jsdelivr.net", "https://cdnjs.cloudflare.com", "'unsafe-inline'"],
             styleSrc: ["'self'", "'unsafe-inline'", "https://cdnjs.cloudflare.com"],
             scriptSrcAttr: ["'self'", "'unsafe-inline'"],
-            imgSrc: ["'self'", "data:", "http://localhost:5000/uploads", "https://picsum.photos", "https://fastly.picsum.photos", "https://images.unsplash.com"],
+            imgSrc: ["'self'", "data:", "http://localhost:5000/uploads", "https://picsum.photos", "https://fastly.picsum.photos", "https://images.unsplash.com", "https://project1-1bz0.onrender.com"],
             connectSrc: ["'self'", "http://localhost:5000", "http://127.0.0.1:5500", "https://project1-1bz0.onrender.com"],
             fontSrc: ["'self'", "data:", "https://cdnjs.cloudflare.com"],
             objectSrc: ["'none'"],

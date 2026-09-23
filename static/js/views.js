@@ -217,99 +217,71 @@ async function loadDashboard() {
             </div>
         `;
 
-        // Fetch user's courses
-        const coursesResponse = await courseService.getMyCourses();
-        const courses = coursesResponse.data.courses;
+        // Fetch dashboard data concurrently to avoid serial waterfalls
+        const [coursesResult, assignmentsResult, discussionsResult, announcementsResult] = await Promise.allSettled([
+            courseService.getMyCourses(),
+            assignmentService.getAllAssignments(),
+            discussionService.getAllDiscussions(),
+            announcementService.getAllAnnouncements()
+        ]);
+
+        const courses = coursesResult.status === 'fulfilled' ? (coursesResult.value?.data?.courses || []) : [];
+        const allAssignments = assignmentsResult.status === 'fulfilled' ? (assignmentsResult.value?.data?.assignments || []) : [];
+        const allDiscussions = discussionsResult.status === 'fulfilled' ? (discussionsResult.value?.data?.discussions || []) : [];
+        const allAnnouncements = announcementsResult.status === 'fulfilled' ? (announcementsResult.value?.data?.announcements || []) : [];
 
         // Initialize arrays for assignments and discussions
         let upcomingAssignments = [];
         let recentDiscussions = [];
-
-        // Only proceed if user has courses
-        if (courses.length > 0) {
-            // Fetch upcoming assignments
-            try {
-                const assignmentsResponse = await assignmentService.getAllAssignments();
-                const allAssignments = assignmentsResponse.data.assignments;
-
-
-                upcomingAssignments = allAssignments.filter(assignment => {
-                    // Check if assignment belongs to one of user's courses
-                    const courseMatch = courses.some(course =>
-                        (typeof assignment.course === 'object' && assignment.course._id === course._id) ||
-                        assignment.course === course._id
-                    );
-
-                    // For due date, compare with current date
-                    const dueDate = new Date(assignment.dueDate);
-                    const now = new Date();
-                    const isUpcoming = dueDate > now;
-
-                    // If student, check if already submitted
-                    let notSubmitted = true;
-                    if (currentUser.role === 'student' && assignment.submissions) {
-                        // Check if this student has already submitted
-                        notSubmitted = !assignment.submissions.some(submission =>
-                            (typeof submission.student === 'object' && submission.student._id === currentUser._id) ||
-                            submission.student === currentUser._id
-                        );
-                    }
-
-                    return courseMatch && isUpcoming && (currentUser.role !== 'student' || notSubmitted);
-                });
-
-                // Sort by due date (closest first)
-                upcomingAssignments.sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
-
-                // Limit to 5 items
-                upcomingAssignments = upcomingAssignments.slice(0, 5);
-            } catch (error) {
-                console.warn('Could not fetch assignments:', error);
-            }
-
-            // Fetch recent discussions
-            try {
-                const discussionsResponse = await discussionService.getAllDiscussions();
-                const allDiscussions = discussionsResponse.data.discussions;
-
-                // Filter discussions that are from user's courses
-                recentDiscussions = allDiscussions.filter(discussion => {
-                    return courses.some(course =>
-                        (typeof discussion.course === 'object' && discussion.course._id === course._id) ||
-                        discussion.course === course._id
-                    );
-                });
-
-                // Sort by most recent activity
-                recentDiscussions.sort((a, b) => new Date(b.updatedAt || b.createdAt) - new Date(a.updatedAt || a.createdAt));
-
-                // Limit to 5 items
-                recentDiscussions = recentDiscussions.slice(0, 5);
-            } catch (error) {
-                console.warn('Could not fetch discussions:', error);
-            }
-        }
         let recentAnnouncements = [];
 
-        try {
-            // You may need to implement this in your announcementService
-            const announcementsResponse = await announcementService.getAllAnnouncements();
-            const allAnnouncements = announcementsResponse.data.announcements;
+        // Filter assignments and discussions if user has courses
+        if (courses.length > 0) {
+            upcomingAssignments = allAssignments.filter(assignment => {
+                const courseMatch = courses.some(course =>
+                    (typeof assignment.course === 'object' && assignment.course._id === course._id) ||
+                    assignment.course === course._id
+                );
 
-            // Filter announcements for user's courses
-            recentAnnouncements = allAnnouncements.filter(announcement =>
-    announcement.course && courses.some(course =>
-        (typeof announcement.course === 'object' && announcement.course._id === course._id) ||
-        announcement.course === course._id
-    )
-);
+                const dueDate = new Date(assignment.dueDate);
+                const now = new Date();
+                const isUpcoming = dueDate > now;
 
-            // Sort by most recent
-            recentAnnouncements.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-            recentAnnouncements = recentAnnouncements.slice(0, 5);
-        } catch (error) {
-            console.warn('Could not fetch announcements:', error);
+                let notSubmitted = true;
+                if (currentUser.role === 'student' && assignment.submissions) {
+                    notSubmitted = !assignment.submissions.some(submission =>
+                        (typeof submission.student === 'object' && submission.student._id === currentUser._id) ||
+                        submission.student === currentUser._id
+                    );
+                }
+
+                return courseMatch && isUpcoming && (currentUser.role !== 'student' || notSubmitted);
+            });
+
+            upcomingAssignments.sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
+            upcomingAssignments = upcomingAssignments.slice(0, 5);
+
+            recentDiscussions = allDiscussions.filter(discussion => {
+                return courses.some(course =>
+                    (typeof discussion.course === 'object' && discussion.course._id === course._id) ||
+                    discussion.course === course._id
+                );
+            });
+
+            recentDiscussions.sort((a, b) => new Date(b.updatedAt || b.createdAt) - new Date(a.updatedAt || a.createdAt));
+            recentDiscussions = recentDiscussions.slice(0, 5);
         }
+
+        // Filter announcements for user's courses
+        recentAnnouncements = allAnnouncements.filter(announcement =>
+            announcement.course && courses.some(course =>
+                (typeof announcement.course === 'object' && announcement.course._id === course._id) ||
+                announcement.course === course._id
+            )
+        );
+
+        recentAnnouncements.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        recentAnnouncements = recentAnnouncements.slice(0, 5);
 
 
         // Build dashboard HTML
@@ -6122,54 +6094,43 @@ async function loadProfile(isRefresh = false) {
             throw new Error('Could not load user data');
         }
 
-        // Fetch additional user activity data
-        const activityResponse = await userService.getUserActivity();
-        const activityData = activityResponse.data;
+        // Fetch user profile data concurrently
+        const rolePromise = userData.role === 'student'
+            ? userService.getStudentPerformance()
+            : userData.role === 'instructor'
+                ? userService.getInstructorStats()
+                : Promise.resolve({ data: {} });
 
-        // Fetch user's courses
-        const coursesResponse = await courseService.getMyCourses();
-        const userCourses = coursesResponse.data.courses;
+        const [activityRes, coursesRes, roleRes] = await Promise.allSettled([
+            userService.getUserActivity(),
+            courseService.getMyCourses(),
+            rolePromise
+        ]);
 
-        // Prepare data for different user roles
-        let roleSpecificData = {};
+        const activityData = activityRes.status === 'fulfilled' ? (activityRes.value?.data || {}) : {};
+        const userCourses = coursesRes.status === 'fulfilled' ? (coursesRes.value?.data?.courses || []) : [];
+        let roleSpecificData = roleRes.status === 'fulfilled' ? (roleRes.value?.data || {}) : {};
 
-        // For students: fetch grades and assignment stats
-        if (userData.role === 'student') {
-            try {
-                // Get student performance data
-                const performanceResponse = await userService.getStudentPerformance();
-                roleSpecificData = performanceResponse.data;
-            } catch (error) {
-                console.warn('Could not fetch student performance data:', error);
-                roleSpecificData = {
-                    averageGrade: null,
-                    completedAssignments: 0,
-                    totalAssignments: 0,
-                    onTimeSubmissions: 0,
-                    lateSubmissions: 0,
-                    missedAssignments: 0,
-                    courseProgress: []
-                };
-            }
-        }
-        // For instructors: fetch teaching stats
-        else if (userData.role === 'instructor') {
-            try {
-                // Get instructor teaching data
-                const teachingResponse = await userService.getInstructorStats();
-                roleSpecificData = teachingResponse.data;
-            } catch (error) {
-                console.warn('Could not fetch instructor stats:', error);
-                roleSpecificData = {
-                    totalStudents: 0,
-                    totalCourses: userCourses.length,
-                    totalResources: 0,
-                    totalAssignments: 0,
-                    averageGrade: null,
-                    studentEngagement: [],
-                    recentActivity: []
-                };
-            }
+        if (userData.role === 'student' && roleRes.status === 'rejected') {
+            roleSpecificData = {
+                averageGrade: null,
+                completedAssignments: 0,
+                totalAssignments: 0,
+                onTimeSubmissions: 0,
+                lateSubmissions: 0,
+                missedAssignments: 0,
+                courseProgress: []
+            };
+        } else if (userData.role === 'instructor' && roleRes.status === 'rejected') {
+            roleSpecificData = {
+                totalStudents: 0,
+                totalCourses: userCourses.length,
+                totalResources: 0,
+                totalAssignments: 0,
+                averageGrade: null,
+                studentEngagement: [],
+                recentActivity: []
+            };
         }
 
         // Format account creation date

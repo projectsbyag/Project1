@@ -70,7 +70,6 @@ async function processCourseJoinLink(token) {
 // Initialize the app
 document.addEventListener('DOMContentLoaded', () => {
     initializeApp();
-    setupEventListeners();
 
     // Check for dark mode preference
     if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
@@ -87,18 +86,45 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Initialize app
 async function initializeApp() {
+    const landing = document.getElementById('landingPage');
+    const app = document.getElementById('appContainer');
+    const getStartedBtn = document.getElementById('getStartedBtn');
+    const getStartedBtnFooter = document.getElementById('getStartedBtnFooter');
     const joinToken = new URLSearchParams(window.location.search).get('token');
 
+    function showLanding() {
+        if (landing) landing.style.display = '';
+        if (app) app.style.display = 'none';
+    }
+    function showApp() {
+        if (landing) landing.style.display = 'none';
+        if (app) app.style.display = '';
+    }
 
-    if (!await checkAuth()) {
+    const isAuthenticated = await checkAuth();
+    if (!isAuthenticated) {
         // Save pending join token if not logged in
         if (joinToken) {
             localStorage.setItem('pendingJoinToken', joinToken);
             window.history.replaceState({}, document.title, window.location.pathname);
         }
-        loadLoginPage();
+        showLanding();
+        if (getStartedBtn) {
+            getStartedBtn.onclick = function () {
+                showApp();
+                loadLoginPage();
+            };
+        }
+        if (getStartedBtnFooter) {
+            getStartedBtnFooter.onclick = function () {
+                showApp();
+                loadSignupPage();
+            };
+        }
         return;
     }
+
+    showApp();
     setupEventListeners();
 
     // Initialize language support
@@ -106,10 +132,6 @@ async function initializeApp() {
 
     // Initialize accessibility settings
     initializeAccessibilitySettings();
-
-    // Load appropriate view based on URL params or default to dashboard
-    loadView('dashboard');
-
 
     // Initialize theme based on system preference or saved setting
     initializeTheme();
@@ -221,51 +243,7 @@ function hideUIElements() {
     sidebar.classList.add('hidden');
 }
 
-document.addEventListener('DOMContentLoaded', async function () {
-    const landing = document.getElementById('landingPage');
-    const app = document.getElementById('appContainer');
-    const getStartedBtn = document.getElementById('getStartedBtn');
-    const sidebar = document.getElementById('sidebar');
 
-    // Helper: Show/hide elements
-    function showLanding() {
-        if (landing) landing.style.display = '';
-        if (app) app.style.display = 'none';
-    }
-    function showApp() {
-        if (landing) landing.style.display = 'none';
-        if (app) app.style.display = '';
-    }
-
-    // Check authentication
-    let isAuthenticated = false;
-    try {
-        isAuthenticated = await checkAuth();
-    } catch (e) {
-        isAuthenticated = false;
-    }
-
-    if (isAuthenticated) {
-        showApp();
-        loadView('dashboard');
-    } else {
-        showLanding();
-        if (getStartedBtn) {
-            getStartedBtn.onclick = function () {
-                showApp();
-                loadLoginPage();
-            };
-        }
-        // Handle footer CTA button
-        const getStartedBtnFooter = document.getElementById('getStartedBtnFooter');
-        if (getStartedBtnFooter) {
-            getStartedBtnFooter.onclick = function () {
-                showApp();
-                loadSignupPage();
-            };
-        }
-    }
-});
 
 document.addEventListener('DOMContentLoaded', function () {
     const sidebar = document.getElementById('sidebar');
